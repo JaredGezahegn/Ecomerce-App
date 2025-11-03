@@ -69,5 +69,4 @@ It’s ideal for developers who want to:
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/ecommerce-django-react.git
-cd ecommerce-django-react
+ https://github.com/JaredGezahegn/Ecomerce-App.git
