@@ -30,8 +30,7 @@ It’s ideal for developers who want to:
 ✅ User Authentication (JWT-based Login & Registration)  
 ✅ Product Listing, Search & Filtering  
 ✅ Shopping Cart & Checkout Flow  
-✅ Real Payment Integration (Flutterwave & PayPal)  
-✅ Order Tracking System  
+✅ Real Payment Integration (Flutterwave & PayPal)    
 ✅ Admin Dashboard for Products & Orders  
 ✅ Responsive Frontend (React + Tailwind CSS)  
 ✅ RESTful API with Django REST Framework  
@@ -43,7 +42,7 @@ It’s ideal for developers who want to:
 
 **Frontend:**  
 - React  
-- Tailwind CSS  
+- Bootstrap   
 - Axios  
 - React Router DOM  
 
@@ -57,9 +56,7 @@ It’s ideal for developers who want to:
 - Flutterwave  
 - PayPal  
 
-**DevOps & Tools:**  
-- Docker & Docker Compose  
-- Nginx  
+**DevOps & Tools:**    
 - GitHub Actions  
 - VS Code  
 
@@ -69,5 +66,5 @@ It’s ideal for developers who want to:
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/ecommerce-django-react.git
+git clone https://github.com/MeKJR-sYsDeveloper/ecommerce-django-react.git
 cd ecommerce-django-react
