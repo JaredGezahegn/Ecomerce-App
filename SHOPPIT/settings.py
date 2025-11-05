@@ -57,8 +57,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React dev server
-    "http://127.0.0.1:3000",
+    "http://localhost:5173",  # React dev server
+    "http://127.0.0.1:5173",
     # Add your frontend domain here
 ]
 
@@ -129,7 +129,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+MEDIA_URL= 'img/'
+MEDIA_ROOT= BASE_DIR/"media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
