@@ -7,10 +7,11 @@ function App() {
   return (
      <Router>
        <Routes>
-          <Route path="/*" element={<MainLayout/>}>
+          <Route path="/" element={<MainLayout/>}>
           <Route index element={<Homepage/>}/>
-          <Route path="*" element={<NotFoundPage/>} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
+          
        </Routes>
      </Router>
   );
