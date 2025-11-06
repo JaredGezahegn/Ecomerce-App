@@ -14,4 +14,5 @@ class DetailProductSerializer(serializers.ModelSerializer):
 
     def get_similar_products(self, product):
          products=Product.objects.filter(category=product.category).exclude(id=product.id)
+         serializer= ProductSerializer(products, many=True)
          return serializer.data
