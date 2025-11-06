@@ -9,7 +9,7 @@ This project demonstrates the combined power of Python and JavaScript to create 
 
 | Name | Role | Links |
 |------|------|-------|
-| **Yared Gezahegn** | 🧑‍🎨 Frontend Developer (React, Tailwind, UX/UI) | [GitHub](https://github.com/jaredGezahegn) · [LinkedIn](https://linkedin.com/in/yared-gezahegn-224368388) |
+| **Yared Gezahegn** | 🧑‍🎨 Frontend Developer (React, Bootstrap, Tailwind, UX/UI) | [GitHub](https://github.com/jaredGezahegn) · [LinkedIn](https://linkedin.com/in/yared-gezahegn-224368388) |
 | **Yosef Abire** | 🧑‍💻 Backend Developer (Django, REST API, Database Design) | [GitHub](https://github.com/MeKJR-sYsDeveloper) · [LinkedIn](https://linkedin.com/in/yosef-abire-4a5841394) |
 
 ---
@@ -66,5 +66,4 @@ It’s ideal for developers who want to:
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/MeKJR-sYsDeveloper/ecommerce-django-react.git
-cd ecommerce-django-react
+ https://github.com/JaredGezahegn/Ecomerce-App.git
