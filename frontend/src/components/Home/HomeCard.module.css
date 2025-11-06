@@ -1,0 +1,66 @@
+.col {
+    margin-bottom: 1rem;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.card {
+    width: 100%;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+/* Hover effect same for both themes */
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cardImgWrapper {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.cardImgTop {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cardBody {
+    text-align: center;
+    padding: 0.5rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light theme */
+body.light-theme .cardBody {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body.light-theme .cardTitle,
+body.light-theme .cardText,
+body.light-theme .cardPrice {
+    color: #000000;
+}
+
+/* Dark theme */
+body.dark-theme .cardBody {
+    background-color: #030303;
+    color: #f5f5f5;
+}
+
+body.dark-theme .cardTitle,
+body.dark-theme .cardText,
+body.dark-theme .cardPrice {
+    color: #f5f5f5;
+}
+
+ 

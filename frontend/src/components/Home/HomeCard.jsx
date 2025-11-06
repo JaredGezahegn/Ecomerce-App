@@ -15,7 +15,7 @@ const HomeCard = () => {
                     </div>
                     <div className={styles.cardBody}>
                         <h5 className={`${styles.cardTitle} mb-1 `}>Product Name</h5>
-                        <h6 className={`${styles.cardPrice} text-muted`}>$99.99</h6>
+                        <h6 className={`${styles.cardPrice}`}>$99.99</h6>
                     </div>
                 </div>  
                 </Link>
