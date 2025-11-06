@@ -9,7 +9,7 @@ This project demonstrates the combined power of Python and JavaScript to create 
 
 | Name | Role | Links |
 |------|------|-------|
-| **Yared Gezahegn** | 🧑‍🎨 Frontend Developer (React, Bootstrap, UX/UI) | [GitHub](https://github.com/jaredGezahegn) · [LinkedIn](https://linkedin.com/in/yared-gezahegn-224368388) |
+| **Yared Gezahegn** | 🧑‍🎨 Frontend Developer (React, Bootstrap, Tailwind, UX/UI) | [GitHub](https://github.com/jaredGezahegn) · [LinkedIn](https://linkedin.com/in/yared-gezahegn-224368388) |
 | **Yosef Abire** | 🧑‍💻 Backend Developer (Django, REST API, Database Design) | [GitHub](https://github.com/MeKJR-sYsDeveloper) · [LinkedIn](https://linkedin.com/in/yosef-abire-4a5841394) |
 
 ---
@@ -30,8 +30,7 @@ It’s ideal for developers who want to:
 ✅ User Authentication (JWT-based Login & Registration)  
 ✅ Product Listing, Search & Filtering  
 ✅ Shopping Cart & Checkout Flow  
-✅ Real Payment Integration (Flutterwave & PayPal)  
-✅ Order Tracking System  
+✅ Real Payment Integration (Flutterwave & PayPal)    
 ✅ Admin Dashboard for Products & Orders  
 ✅ Responsive Frontend (React + Tailwind CSS)  
 ✅ RESTful API with Django REST Framework  
@@ -43,7 +42,7 @@ It’s ideal for developers who want to:
 
 **Frontend:**  
 - React  
-- Tailwind CSS  
+- Bootstrap   
 - Axios  
 - React Router DOM  
 
@@ -57,9 +56,7 @@ It’s ideal for developers who want to:
 - Flutterwave  
 - PayPal  
 
-**DevOps & Tools:**  
-- Docker & Docker Compose  
-- Nginx  
+**DevOps & Tools:**    
 - GitHub Actions  
 - VS Code  
 
