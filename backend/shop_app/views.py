@@ -2,7 +2,7 @@ from django.shortcuts import render
 #from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from .models import Product,Cart,CartItem
-from .serializers import ProductSerializer, DetailedProductSerializer, CartItemSerializer, SimpleCartSerializer
+from .serializers import CartSerializer,ProductSerializer, DetailedProductSerializer, CartItemSerializer, SimpleCartSerializer
 from rest_framework.response import Response
 # Create your views here.
 def home(request):
@@ -58,3 +58,24 @@ def get_cart_stat(request):
      cart=Cart.objects.get(cart_code=cart_code, paid=False)
      serializer= SimpleCartSerializer(cart)
      return Response(serializer.data)
+@api_view(['GET'])
+def get_cart(request):
+     cart_code=request.query_params.get("cart_code")
+     cart=Cart.objects.get(cart_code=cart_code, paid=False)
+     serializer=CartSerializer(cart)
+     return Response(serializer.data)
+@api_view(['PATCH'])
+def update_quantity(request):
+    try:
+          cartitem_id= request.data.get("item_id")
+          quantity = request.data.get("quantity")
+          quantity=int(quantity)
+          cartitem= cartitem.objects.get(id=cartitem_id)
+          cartitem.quantity=quantity
+          cartitem.save()
+          serializer = CartItemSerializer(cartitem)
+          return Response({"data":serializer.data, "message": "Cartitem updated successfully!"})
+    except Exception as e:
+         return Response({'error':str(e)}, status=400)
+
+     
