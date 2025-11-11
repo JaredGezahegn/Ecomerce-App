@@ -78,4 +78,19 @@ def update_quantity(request):
     except Exception as e:
          return Response({'error':str(e)}, status=400)
 
-     
+@api_view(['POST'])
+def import_products(request):
+    from .serializers import DetailedProductSerializer
+
+    products = request.data.get('products', [])
+    results = []
+
+    for item in products:
+        serializer = DetailedProductSerializer(data=item)
+        if serializer.is_valid():
+            serializer.save()
+            results.append({'name': item['title'], 'status': 'imported'})
+        else:
+            results.append({'name': item.get('title', 'Unknown'), 'errors': serializer.errors})
+
+    return Response(results)
