@@ -1,0 +1,16 @@
+@media (max-width: 100px) {
+  .responsiveCart {
+   margin-top: 20px;
+  }
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.stickyNavbar {
+  position: sticky !important;
+  top: 0;
+  z-index: 1030;
+   
+}
