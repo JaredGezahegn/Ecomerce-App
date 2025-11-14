@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Welcome to Shoppit</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #0078D7;
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.2em;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: white;
+            color: #0078D7;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #e0e0e0;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 40px 20px;
+            background-color: #fff;
+        }
+        .image-card {
+            margin: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .image-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .image-card img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .caption {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #444;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #eee;
+            color: #666;
+        }
+        footer a {
+    transition: transform 0.3s ease, font-weight 0.3s ease;
+    text-decoration: none;
+}
+
+footer a:hover {
+    transform: scale(1.2);
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛍️ Welcome to MeKJR's Shoppit</h1>
+        <p>Your one-stop shop for electronics, groceries, and clothing.</p>
+        <a href="/products" class="btn">Browse Products</a>
+    </header>
+
+    <section class="gallery">
+        <div class="image-card">
+            <img src="/media/img/gamokitfo.jpg" alt="Traditional Food Preparation">
+            <p class="caption">Authentic Ethiopian Kitfo with injera</p>
+        </div>
+        <div class="image-card">
+            <img src="/media/img/bulla.jpg" alt="Macaroni and Cheese">
+            <p class="caption">Comfort food: baked macaroni and cheese</p>
+        </div>
+        <div class="image-card">
+            <img src="/media/img/enset.jpg" alt="Ethiopian Kitfo Dish">
+            <p class="caption">Sustainable traditional food preparation</p>
+        </div>
+    </section>
+
+    <footer>
+    <p>Connect with us:</p>
+    <p style="font-size: 1.5em;">
+        <a href="https://www.linkedin.com" target="_blank" style="margin: 0 10px; color: #0A66C2;">
+            <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="https://www.upwork.com" target="_blank" style="margin: 0 10px; color: #6fda44;">
+            <i class="fab fa-upwork"></i>
+        </a>
+        <a href="https://www.facebook.com" target="_blank" style="margin: 0 10px; color: #1877F2;">
+            <i class="fab fa-facebook"></i>
+        </a>
+        <a href="https://www.youtube.com" target="_blank" style="margin: 0 10px; color: #FF0000;">
+            <i class="fab fa-youtube"></i>
+        </a>
+        <a href="https://www.tiktok.com" target="_blank" style="margin: 0 10px; color: #000;">
+            <i class="fab fa-tiktok"></i>
+        </a>
+        <a href="https://www.github.com" target="_blank" style="margin: 0 10px; color: #333;">
+            <i class="fab fa-github"></i>
+        </a>
+    </p>
+    <p style="color: #666;">&copy; 2025 Shoppit. All rights reserved.</p>
+    <p> Gamo Bayra Dere Yelo Tana Yosef Abire Gitte.</p>
+</footer>
+
+
+</body>
+</html>
