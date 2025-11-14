@@ -7,7 +7,7 @@ This project demonstrates the combined power of Python and JavaScript to create 
 
 ## 👨‍💻 Team Members
 
-<<<<<<<< HEAD:frontend/README.md
+ 
 | Name | Role | Links |
 |------|------|-------|
 | **Yared Gezahegn** | 🧑‍🎨 Frontend Developer (React, Bootstrap, Tailwind, UX/UI) | [GitHub](https://github.com/jaredGezahegn) · [LinkedIn](https://linkedin.com/in/yared-gezahegn-224368388) |
