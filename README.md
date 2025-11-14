@@ -1,96 +1,181 @@
-# 🛍️ Fullstack E-Commerce Website (Django + React)
+ # 🛍️ Fullstack E-Commerce Website (Django + React)
 
-A **fullstack e-commerce website** using **Django** (backend) and **React** (frontend)!  
-This project demonstrates the combined power of Python and JavaScript to create a complete online shopping experience — from backend logic to a beautiful responsive UI.
+A complete **fullstack e-commerce platform** built with **Django** (backend) and **React** (frontend).  
+This project delivers a functional online shopping experience with authentication, product management, and payment integration.
 
 ---
 
 ## 👨‍💻 Team Members
 
- 
 | Name | Role | Links |
 |------|------|-------|
-| **Yared Gezahegn** | 🧑‍🎨 Frontend Developer (React, Bootstrap, Tailwind, UX/UI) | [GitHub](https://github.com/jaredGezahegn) · [LinkedIn](https://linkedin.com/in/yared-gezahegn-224368388) |
-| **Yosef Abire** | 🧑‍💻 Backend Developer (Django, REST API, Database Design) | [GitHub](https://github.com/MeKJR-sYsDeveloper) · [LinkedIn](https://linkedin.com/in/yosef-abire-4a5841394) |
- 
+| **Yared Gezahegn** | Frontend Developer (React, Bootstrap, UX/UI) | [GitHub](https://github.com/jaredGezahegn) · [LinkedIn](https://linkedin.com/in/yared-gezahegn-224368388) |
+| **Yosef Abire** | Backend Developer (Django, REST API, DB Design) | [GitHub](https://github.com/MeKJR-sYsDeveloper) · [LinkedIn](https://linkedin.com/in/yosef-abire-4a5841394) |
 
 ---
 
 ## 🚀 Project Overview
 
-This project covers the process of building and deploying a complete **e-commerce platform** from scratch — including **frontend, backend, payments, and deployment**.
+A production-ready **full e-commerce platform** built using:
 
-It’s ideal for developers who want to:
+- **Django** for backend API  
+- **React** for frontend UI  
+- **Flutterwave & PayPal** for payments  
+- **PostgreSQL** or **MySQL** for database  
+- Fully responsive design  
 
-- Learn **Django + React fullstack integration**
-- Understand **e-commerce logic & workflows**
-- Deploy a scalable project to production
+This project is perfect for learning **fullstack architecture**, **API design**, and **modern frontend development**.
 
 ---
 
 ## 🧩 Features
 
-✅ User Authentication (JWT-based Login & Registration)  
-✅ Product Listing, Search & Filtering  
-✅ Shopping Cart & Checkout Flow  
-<<<<<<<< HEAD:frontend/README.md
-✅ Real Payment Integration (Flutterwave & PayPal)    
-========
-✅ Real Payment Integration (Flutterwave & PayPal)  
->>>>>>>> origin/main:README.md
-✅ Admin Dashboard for Products & Orders  
-✅ Responsive Frontend (React + Tailwind CSS)  
-✅ RESTful API with Django REST Framework  
-✅ Docker Support for Easy Deployment
+- 🛒 Product Listing, Search & Filtering  
+- 👤 JWT-Based Authentication  
+- 🛍️ Cart & Checkout Flow  
+- 💳 Flutterwave + PayPal Payment Integration  
+- 📦 Admin Dashboard  
+- 📱 Fully Responsive UI  
+- 🚀 REST API with Django  
+- 🐳 Optional Docker Support  
 
 ---
 
 ## 🛠️ Tech Stack
 
-<<<<<<<< HEAD:frontend/README.md
-**Frontend:**  
+### **Frontend**
 - React  
-- Bootstrap   
+- Bootstrap  
 - Axios  
 - React Router DOM  
-========
-**Frontend:**
->>>>>>>> origin/main:README.md
 
-- React
-- Bootstrap
-- Axios
-- React Router DOM
+### **Backend**
+- Django  
+- Django REST Framework  
+- PostgreSQL / MySQL  
+- ElasticSearch (for optimized search)
 
-**Backend:**
+### **Payments**
+- Flutterwave  
+- PayPal  
 
-<<<<<<<< HEAD:frontend/README.md
-**DevOps & Tools:**    
-- GitHub Actions  
+### **DevOps / Tools**
+- GitHub  
 - VS Code  
-========
-- Django
-- Django REST Framework (DRF)
-- PostgreSQL / MySQL
-- ElasticSearch (for fast product search)
-
-**Payments:**
-
-- Flutterwave
-- PayPal
-
-**DevOps & Tools:**
-
-- GitHub Actions
-- VS Code
->>>>>>>> origin/main:README.md
+- Docker (optional)
 
 ---
 
 ## ⚙️ Installation & Setup
 
-### 1️⃣ Clone the repository
-
+### 1️⃣ Clone the Repository
 ```bash
- https://github.com/JaredGezahegn/Ecomerce-App.git
+git clone https://github.com/JaredGezahegn/Ecomerce-App.git
 ```
+
+---
+
+## ▶️ Backend Setup (Django)
+
+Navigate to the backend folder:
+```bash
+cd backend
+```
+
+Create and activate a virtual environment:
+```bash
+python -m venv venv
+venv\Scripts\activate  # Windows
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Run migrations:
+```bash
+python manage.py migrate
+```
+
+Start the server:
+```bash
+python manage.py runserver
+```
+
+The backend runs at:
+```
+http://127.0.0.1:8000/
+```
+
+---
+
+## 💻 Frontend Setup (React)
+
+Navigate to the frontend folder:
+```bash
+cd frontend
+```
+
+Install dependencies:
+```bash
+npm install
+```
+
+Start the development server:
+```bash
+npm run dev
+```
+
+Frontend runs at:
+```
+http://localhost:5173/
+```
+
+---
+
+## 📁 Folder Structure
+
+```
+Ecommerce-App/
+│
+├── backend/
+│   ├── ecommerce/         # Django project
+│   ├── products/          # Products app
+│   ├── orders/            # Orders app
+│   ├── users/             # Auth system
+│   └── ...
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── api/
+│   │   └── ...
+│   └── public/
+│
+└── README.md
+```
+
+---
+
+ 
+
+## 📦 Running the App Together
+
+1. Start **Django backend**  
+2. Start **React frontend**  
+3. Ensure CORS and `.env` values match  
+4. Open the browser and test features  
+
+ 
+---
+
+## 🙌 Contributing
+Pull requests are welcome!  
+
+---
+
+## 🌟 Show Support
+Leave a ⭐ on the repo if you found it helpful!
+
