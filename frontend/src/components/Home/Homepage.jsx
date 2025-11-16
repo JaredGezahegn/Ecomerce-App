@@ -3,7 +3,7 @@ import CardContainer from './CardContainer';
 import api from '../../api';
 import React, { useEffect, useState } from "react";
 import PlaceHolderContainer from '../ui/PlaceHolderContainer';
-import ErrorPage from '../ui/Error';
+import Error from '../ui/Error';
 
 const Homepage = () => {
 
@@ -11,7 +11,7 @@ const Homepage = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const [error, setError] = useState( "");
+    const [error, setError] = useState("");
 
     useEffect(function(){
         setLoading(true)
@@ -31,11 +31,16 @@ const Homepage = () => {
 
     return (
         <>
-        <Header/>
-        {error && <Error error={error}/>}
-       {loading ? <PlaceHolderContainer /> : <CardContainer products={products}/>}
-       
+            <Header />
+
+            {loading && <PlaceHolderContainer />}
+
+            {error && <Error error={error} />}
+
+            {!loading && !error && <CardContainer products={products} />}
         </>
-    )
+
+    );
+
 }
 export default Homepage;
