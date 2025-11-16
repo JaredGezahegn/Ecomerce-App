@@ -67,7 +67,7 @@ class Product(models.Model):
             self.slug = unique_slug
         super().save(*args, **kwargs)
 
-# Cart and CartItem remain unchanged except for a small fix
+
 class Cart(models.Model):
     cart_code = models.CharField(max_length=11, unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
@@ -84,4 +84,4 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} in cart {self.cart.id}"
+        return f"{self.quantity} x {self.product.name} in cart {self.cart.id}" 
