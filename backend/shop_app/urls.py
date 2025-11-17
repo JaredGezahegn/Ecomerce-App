@@ -11,6 +11,8 @@ urlpatterns= [
     path("get_cart_stat", views.get_cart_stat, name="get_cart_stat"),
     path("get_cart", views.get_cart, name="get_cart"),
     path("update_quantity/", views.update_quantity, name="update_quantity"),
-    path('import-products/', import_products),
-
+    path("import-products/", import_products),
+    path("get_username", views.get_username, name="get_username"),
+    path("user_info/", views.user_info, name="user_info"),
+    
 ]

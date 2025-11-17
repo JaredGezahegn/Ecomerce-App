@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Product, Cart, CartItem, Dimensions, MetaInfo, Review
 from rest_framework.fields import ImageField
+from django.contrib.auth import get_user_model
 
 # Nested serializers for rich product data
 class DimensionsSerializer(serializers.ModelSerializer):
@@ -83,3 +84,7 @@ class SimpleCartSerializer(serializers.ModelSerializer):
     def get_num_of_items(self, cart):
         return sum(item.quantity for item in cart.items.all())
     
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= get_user_model()
+        fields= ["id","username","first_name","last_name","email", "city", "state", "address", "phone"]
