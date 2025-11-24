@@ -1,17 +1,19 @@
-import HomeCard from './HomeCard.jsx';
+import React from 'react';
+import PlaceHolder from './PlaceHolder';
 
-const CartContainer = ({products}) => {
+const PlaceHolderContainer = () => {
+
+    const placeNumbers =[...Array(8).keys()].slice(0);
     return (
         <section className="py-5" id="shop">
             <h4 style={{textAlign: "center"}}>Our Products</h4>
             <div className="container px-4 px-lg-5 mt-5">
                 <div className="row justify-content-center">
-            {products.map(product => <HomeCard key={product.id} product={product} />)}
-                    {/* Product cards will go here */}
+                    {placeNumbers.map(num => <PlaceHolder key={num} />,)}
                     
-                </div>
+                    </div>
             </div>
         </section>
     );
-}
-export default CartContainer;
+}   
+export default PlaceHolderContainer;
