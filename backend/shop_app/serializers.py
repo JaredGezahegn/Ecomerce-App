@@ -37,11 +37,11 @@ class DetailedProductSerializer(serializers.ModelSerializer):
             'id', 'name', 'slug', 'thumbnail', 'images', 'description', 'price',
             'discountPercentage', 'rating', 'stock', 'tags', 'brand', 'sku', 'weight',
             'dimensions', 'warrantyInformation', 'shippingInformation', 'availabilityStatus',
-            'reviews', 'returnPolicy', 'minimumOrderQuantity', 'meta', 'category'
+            'reviews', 'returnPolicy', 'minimumOrderQuantity', 'meta', 'category','similar_products'
         ]
 
     def get_similar_products(self, product):
-        products = Product.objects.filter(category=product.category).exclude(id=product.id)
+        products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
         serializer = ProductSerializer(products, many=True)
         return serializer.data
 
