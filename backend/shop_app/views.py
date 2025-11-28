@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Product,Cart,CartItem
 from .serializers import CartSerializer,ProductSerializer,DetailedProductSerializer, CartItemSerializer, SimpleCartSerializer, UserSerializer
 from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
@@ -19,9 +21,13 @@ def products(request):
     return Response(serializers.data)
 @api_view(["GET"])
 def product_detail(request, slug):
-    product= Product.objects.get(slug=slug)
-    serializer= DetailedProductSerializer(product)
-    return Response(serializer.data) 
+    product = get_object_or_404(
+        Product.objects.select_related("dimensions", "meta").prefetch_related("reviews"),
+        slug=slug
+    )
+    serializer = DetailedProductSerializer(product)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+ 
 @api_view(["POST"])
 def add_item(request):
     try:

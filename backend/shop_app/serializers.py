@@ -3,6 +3,7 @@ from .models import Product, Cart, CartItem, Dimensions, MetaInfo, Review
 from rest_framework.fields import ImageField
 from django.contrib.auth import get_user_model
 
+
 # Nested serializers for rich product data
 class DimensionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +31,7 @@ class DetailedProductSerializer(serializers.ModelSerializer):
     dimensions = DimensionsSerializer()
     meta = MetaInfoSerializer()
     reviews = ReviewSerializer(many=True)
+    similar_products = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -40,7 +42,7 @@ class DetailedProductSerializer(serializers.ModelSerializer):
             'reviews', 'returnPolicy', 'minimumOrderQuantity', 'meta', 'category','similar_products'
         ]
 
-    def get_similar_products(self, product):
+    def get_similar_products(self, obj):
         products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
         serializer = ProductSerializer(products, many=True)
         return serializer.data
