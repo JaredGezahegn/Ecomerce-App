@@ -43,9 +43,10 @@ class DetailedProductSerializer(serializers.ModelSerializer):
         ]
 
     def get_similar_products(self, obj):
-        products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
-        serializer = ProductSerializer(products, many=True)
-        return serializer.data
+       return ProductSerializer(
+        Product.objects.filter(category=obj.category).exclude(id=obj.id)[:4],
+        many=True
+    ).data
 
 # Cart item serializer
 class CartItemSerializer(serializers.ModelSerializer):
