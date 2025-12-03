@@ -39,14 +39,19 @@ class DetailedProductSerializer(serializers.ModelSerializer):
             'id', 'name', 'slug', 'thumbnail', 'images', 'description', 'price',
             'discountPercentage', 'rating', 'stock', 'tags', 'brand', 'sku', 'weight',
             'dimensions', 'warrantyInformation', 'shippingInformation', 'availabilityStatus',
-            'reviews', 'returnPolicy', 'minimumOrderQuantity', 'meta', 'category','similar_products'
+            'reviews', 'returnPolicy', 'minimumOrderQuantity', 'meta', 'category','similar_products',
         ]
 
-    def get_similar_products(self, obj):
+    '''def get_similar_products(self, obj):
        return ProductSerializer(
         Product.objects.filter(category=obj.category).exclude(id=obj.id)[:4],
         many=True
-    ).data
+    ).data '''
+    def get_similar_products(self, obj):
+        # Fetch similar products from context (set in the view)
+        similar = self.context.get("similar_products", [])
+        return ProductSerializer(similar, many=True, context=self.context).data
+
 
 # Cart item serializer
 class CartItemSerializer(serializers.ModelSerializer):
