@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/ui/Navbar';
 import Footer from '../components/ui/Footer';
 
-const MainLayout = () => {
+const MainLayout = ({numCartItems}) => {
   const location = useLocation();
 
   // List routes where Navbar/Footer should be hidden
@@ -12,7 +12,7 @@ const MainLayout = () => {
   return (
     <>
       {/* Navbar and Footer hidden only on specific routes */}
-      {!shouldHideLayout && <Navbar />}
+      {!shouldHideLayout && <Navbar numCartItems={numCartItems} />}
       <Outlet />
       {!shouldHideLayout && <Footer />}
     </>
