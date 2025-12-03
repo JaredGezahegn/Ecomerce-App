@@ -7,6 +7,8 @@ from .serializers import CartSerializer,ProductSerializer,DetailedProductSeriali
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+
+
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
@@ -25,40 +27,92 @@ def product_detail(request, slug):
         Product.objects.select_related("dimensions", "meta").prefetch_related("reviews"),
         slug=slug
     )
-    serializer = DetailedProductSerializer(product)
+
+   
+    similar_products = Product.objects.filter(
+        category=product.category
+    ).exclude(id=product.id)[:10]
+ 
+
+    
+    serializer = DetailedProductSerializer(
+        product,
+        context={
+            "similar_products": similar_products,
+            "request": request
+        }
+    )
+
     return Response(serializer.data, status=status.HTTP_200_OK)
+
  
 @api_view(["POST"])
 def add_item(request):
+    cart_code = request.data.get("cart_code")
+    product_id = request.data.get("product_id")
+    quantity = request.data.get("quantity", 1)  
+
+    
+    if not cart_code or not product_id:
+        return Response(
+            {"error": "cart_code and product_id are required"},
+            status=400
+        )
+
+ 
     try:
-          cart_code = request.data.get("cart_code")
-          product_id= request.data.get("product_id")
+        quantity = int(quantity)
+        if quantity < 1:
+            return Response({"error": "quantity must be at least 1"}, status=400)
+    except:
+        return Response({"error": "quantity must be a number"}, status=400)
 
-          cart, created = Cart.objects.get_or_create(cart_code=cart_code)
-          product= Product.objects.get(id=product_id)
+    
+    cart, _ = Cart.objects.get_or_create(cart_code=cart_code)
+    product = get_object_or_404(Product, id=product_id)
 
-          cartitem, created= CartItem.objects.get_or_create(cart=cart, product=product)
-          cartitem.quantity=1
-          cartitem.save()
+  
+    cartitem, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-          serializer= CartItemSerializer(cartitem)
-          return Response({"data": serializer.data, "message": "CartItem Created Successfully"}, status=201)
-    except Exception as e:
-         return Response({"error": str(e)}, status=400)
+    if not created:
+        cartitem.quantity += quantity
+    else:
+        cartitem.quantity = quantity
+
+    cartitem.save()
+
+    serializer = CartItemSerializer(cartitem)
+    return Response(
+        {
+            "message": "Item added to cart successfully",
+            "cart_item": serializer.data
+        },
+        status=201
+    )
+
    
    
    
 @api_view(['GET'])
 def product_in_cart(request):
-     cart_code=request.query_params_get("cart_code")
-     product_id=request.query_params_get("product_id")
+    cart_code = request.query_params.get("cart_code")
+    product_id = request.query_params.get("product_id")
 
-     cart= Cart.objects.get(cart_code=cart_code)
-     product=Product.objects.get(id=product_id)
+    if not cart_code or not product_id:
+        return Response(
+            {"error": "cart_code and product_id are required"},
+            status=400
+        )
 
-     product_exists_in_cart= CartItem.objects.filter(cart=cart, product=product).exists()
+    cart = get_object_or_404(Cart, cart_code=cart_code)
+    product = get_object_or_404(Product, id=product_id)
 
-     return Response({'product_in_cart': product_exists_in_cart})
+    product_exists_in_cart = CartItem.objects.filter(
+        cart=cart,
+        product=product
+    ).exists()
+
+    return Response({"product_in_cart": product_exists_in_cart})
 @api_view(['GET'])
 def get_cart_stat(request):
      cart_code=request.query_params.get("cart_code")
