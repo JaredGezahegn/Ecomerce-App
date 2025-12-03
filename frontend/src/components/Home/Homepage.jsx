@@ -13,20 +13,36 @@ const Homepage = () => {
 
     const [error, setError] = useState("");
 
-    useEffect(function(){
+    // useEffect(function () {
+    //     if (localStorage.get("cart_code") === null) {localStorage.setItem("cart_code", randomValue) 
+
+    //     }
+    // }, [])
+    useEffect(() => {
+        const cartCode = localStorage.getItem("cart_code");
+
+        if (!cartCode) {
+            const randomValue = Math.random().toString(36).substring(2, 12);
+            localStorage.setItem("cart_code", randomValue);
+        }
+    }, []);
+
+
+    useEffect(function () {
         setLoading(true)
-    api.get("products")
-    .then(res =>{console.log(res.data)
-             setProducts(res.data);
-             setLoading(false); 
-    })
-   
-    .catch(err =>{
-        console.log(err.message)
-        setLoading(false);
-        setError(err.message);
-    })
-    
+        api.get("products")
+            .then(res => {
+                console.log(res.data)
+                setProducts(res.data);
+                setLoading(false);
+            })
+
+            .catch(err => {
+                console.log(err.message)
+                setLoading(false);
+                setError(err.message);
+            })
+
     }, [])
 
     return (
