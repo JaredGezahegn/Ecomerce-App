@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { FaSun, FaMoon, FaGlobe } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -7,21 +7,36 @@ import NavBarLink from './NavBarLink';
 
 const NavBar = ({numCartItems}) => {
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [language, setLanguage] = useState('en'); // 'en' or 'am'
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark-theme");
+      document.body.classList.remove("light-theme");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.add("light-theme");
+      document.body.classList.remove("dark-theme");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    document.body.classList.toggle('bg-dark');
-    document.body.classList.toggle('text-light');
+    setIsDarkMode(prev => !prev);
   };
+
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'am' : 'en');
   };
 
   return (
-    <nav className={`navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 ${styles.stickyNav}}`}>
+    <nav
+      className={`navbar navbar-expand-lg shadow-sm py-3 ${isDarkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-white'
+        } ${styles.stickyNav}`}>
       <div className="container">
         <Link className="navbar-brand fw-bold text-uppercase" to="/">ባለ ሱቅ</Link>
         <button

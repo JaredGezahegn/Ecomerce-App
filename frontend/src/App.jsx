@@ -5,6 +5,8 @@ import NotFoundPage from './components/ui/NotFoundPage';
 import ProductPage from './components/product/ProductPage';
 import { useState, useEffect } from "react"
 import CartPage from './components/cart/CartPage';
+import api from './api';
+
 
 function App() {
 

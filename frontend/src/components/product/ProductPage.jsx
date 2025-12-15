@@ -33,18 +33,22 @@ const ProductPage = ({ setNumberCartItems }) => {
     const newItem = { cart_code: cart_code, product_id: product.id }
 
     function add_item() {
-        api.post("add_item/")
+        const newItem = {
+            cart_code: cart_code,
+            product_id: product.id
+        };
+
+        api.post("add_item/", newItem)
             .then(res => {
-                console.log(res.data)
-                setInCart(true)
-                setNumberCartItems(curr => curr + 1)
+                console.log(res.data);
+                setInCart(true);
+                setNumberCartItems(curr => curr + 1);
             })
-
             .catch(err => {
-                console.log(err.message)
-
-            })
+                console.log("Add item error:", err.message);
+            });
     }
+
 
 
     useEffect(() => {
@@ -83,7 +87,7 @@ const ProductPage = ({ setNumberCartItems }) => {
     }
 
     return (
-        <div>
+        <div className="mainProductContainer">
             <section className="py-3">
                 <div className="container px-4 px-lg-5 my-5">
                     <div className="row gx-4 gx-lg-5 align-items-center">
