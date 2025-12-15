@@ -9,7 +9,7 @@
 .card {
     width: 100%;
     border-radius: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     cursor: pointer;
 }
 
@@ -17,6 +17,18 @@
 .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Card border for dark mode */
+body.dark-theme .card {
+    border: 1px solid #444;
+    /* subtle edge */
+}
+
+body.dark-theme .card:hover {
+    border-color: #888;
+    /* highlight edge on hover */
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.15);
 }
 
 .cardImageWrapper {
@@ -60,7 +72,25 @@ body.dark-theme .cardBody {
 body.dark-theme .cardTitle,
 body.dark-theme .cardText,
 body.dark-theme .cardPrice {
-    color: #f5f5f5;
+    color: #ffffff !important;
 }
 
- 
+/* Dark mode headings */
+body.dark-theme h5.cardTitle,
+body.dark-theme h6.cardTitle {
+    color: #ffffff !important;
+}
+
+/* Product page containers for separation */
+body.dark-theme .mainProductContainer {
+    background-color: #1e1e1e;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+body.dark-theme .relatedProductsContainer {
+    background-color: #1b1c1fff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}

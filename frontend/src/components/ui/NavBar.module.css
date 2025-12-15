@@ -1,16 +1,40 @@
-@media (max-width: 100px) {
-  .responsiveCart {
-   margin-top: 20px;
-  }
+/* Light Theme — default */
+body.light-theme {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --navbar-bg: #ffffff;
+  --navbar-text: #000000;
 }
 
+/* Dark Theme */
+body.dark-theme {
+  --bg-color: #181818;
+  --text-color: #ffffff;
+  --navbar-bg: #202020;
+  --navbar-text: #ffffff;
+}
+
+/* Global Body Transition */
 body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Sticky Navbar */
 .stickyNavbar {
   position: sticky !important;
   top: 0;
   z-index: 1030;
-   
+  background-color: var(--navbar-bg) !important;
+  color: var(--navbar-text) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  /* subtle divider in dark mode */
+}
+
+/* Ensure Navbar Links Follow Theme */
+.stickyNavbar a,
+.stickyNavbar .nav-link,
+.stickyNavbar i {
+  color: var(--navbar-text) !important;
 }
