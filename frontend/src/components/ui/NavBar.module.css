@@ -22,19 +22,28 @@ body {
 }
 
 /* Sticky Navbar */
-.stickyNavbar {
+.stickyNav {
   position: sticky !important;
   top: 0;
   z-index: 1030;
   background-color: var(--navbar-bg) !important;
   color: var(--navbar-text) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  /* subtle divider in dark mode */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Ensure Navbar Links Follow Theme */
-.stickyNavbar a,
-.stickyNavbar .nav-link,
-.stickyNavbar i {
+.stickyNav a,
+.stickyNav .nav-link,
+.stickyNav i {
   color: var(--navbar-text) !important;
+}
+
+/* Responsive cart button */
+.responsiveCart {
+  transition: all 0.3s ease;
+}
+
+.responsiveCart:hover {
+  transform: scale(1.05);
 }

@@ -317,7 +317,14 @@ def update_quantity(request):
           cartitem_id= request.data.get("item_id")
           quantity = request.data.get("quantity")
           quantity=int(quantity)
-          cartitem= cartitem.objects.get(id=cartitem_id)
+          
+          if quantity <= 0:
+              # Remove item if quantity is 0 or less
+              cartitem = CartItem.objects.get(id=cartitem_id)
+              cartitem.delete()
+              return Response({"message": "Item removed from cart successfully!"})
+          
+          cartitem= CartItem.objects.get(id=cartitem_id)
           cartitem.quantity=quantity
           cartitem.save()
           serializer = CartItemSerializer(cartitem)
