@@ -12,7 +12,13 @@ export const useLang = () => {
 
 export const LangProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('language') || 'en';
+    // Force Amharic as default and clear any existing English preference
+    const stored = localStorage.getItem('language');
+    if (!stored || stored === 'en') {
+      localStorage.setItem('language', 'am');
+      return 'am';
+    }
+    return stored;
   });
 
   useEffect(() => {
@@ -86,6 +92,30 @@ export const LangProvider = ({ children }) => {
         'common.edit': 'Edit',
         'common.delete': 'Delete',
         'common.view': 'View',
+        
+        // Authentication
+        'auth.login': 'Login',
+        'auth.signup': 'Sign Up',
+        'auth.logout': 'Logout',
+        'auth.username': 'Username',
+        'auth.email': 'Email',
+        'auth.password': 'Password',
+        'auth.confirmPassword': 'Confirm Password',
+        'auth.firstName': 'First Name',
+        'auth.lastName': 'Last Name',
+        'auth.phone': 'Phone Number',
+        'auth.city': 'City',
+        'auth.state': 'State',
+        'auth.address': 'Address',
+        'auth.noAccount': "Don't have an account?",
+        'auth.hasAccount': 'Already have an account?',
+        'auth.forgotPassword': 'Forgot Password?',
+        'auth.loginSuccess': 'Login successful!',
+        'auth.signupSuccess': 'Account created successfully!',
+        'auth.loginFailed': 'Login failed. Please check your credentials.',
+        'auth.signupFailed': 'Signup failed. Please try again.',
+        'auth.passwordMismatch': 'Passwords do not match',
+        'auth.welcome': 'Welcome back!',
       },
       am: {
         // Navigation
@@ -148,6 +178,30 @@ export const LangProvider = ({ children }) => {
         'common.edit': 'ያርትዑ',
         'common.delete': 'ይሰርዙ',
         'common.view': 'ይመልከቱ',
+        
+        // Authentication
+        'auth.login': 'ግባ',
+        'auth.signup': 'ተመዝገብ',
+        'auth.logout': 'ውጣ',
+        'auth.username': 'የተጠቃሚ ስም',
+        'auth.email': 'ኢሜይል',
+        'auth.password': 'የይለፍ ቃል',
+        'auth.confirmPassword': 'የይለፍ ቃል አረጋግጥ',
+        'auth.firstName': 'ስም',
+        'auth.lastName': 'የአባት ስም',
+        'auth.phone': 'ስልክ ቁጥር',
+        'auth.city': 'ከተማ',
+        'auth.state': 'ክልል',
+        'auth.address': 'አድራሻ',
+        'auth.noAccount': 'መለያ የለዎትም?',
+        'auth.hasAccount': 'መለያ አለዎት?',
+        'auth.forgotPassword': 'የይለፍ ቃል ረሱ?',
+        'auth.loginSuccess': 'በተሳካ ሁኔታ ገብተዋል!',
+        'auth.signupSuccess': 'መለያ በተሳካ ሁኔታ ተፈጥሯል!',
+        'auth.loginFailed': 'መግባት አልተሳካም። እባክዎ መረጃዎን ያረጋግጡ።',
+        'auth.signupFailed': 'ምዝገባ አልተሳካም። እባክዎ እንደገና ይሞክሩ።',
+        'auth.passwordMismatch': 'የይለፍ ቃሎች አይዛመዱም',
+        'auth.welcome': 'እንኳን ደህና መጡ!',
       }
     };
 
