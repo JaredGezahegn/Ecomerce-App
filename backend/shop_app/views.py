@@ -187,7 +187,8 @@ def user_info(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
-@api_view(["POST"])
+@api_view(["GET"])
+
 @permission_classes([IsAuthenticated])
 def initiate_payment(request):
     if request.user:
@@ -243,6 +244,109 @@ def initiate_payment(request):
                 return Response(response.json(), status=response.status_code)
         except requests.exceptions.RequestException as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+def add_item(request):
+    cart_code = request.data.get("cart_code")
+    product_id = request.data.get("product_id")
+    quantity = request.data.get("quantity", 1)  
+
+    
+    if not cart_code or not product_id:
+        return Response(
+            {"error": "cart_code and product_id are required"},
+            status=400
+        )
+
+ 
+    try:
+        quantity = int(quantity)
+        if quantity < 1:
+            return Response({"error": "quantity must be at least 1"}, status=400)
+    except:
+        return Response({"error": "quantity must be a number"}, status=400)
+
+    
+    cart, _ = Cart.objects.get_or_create(cart_code=cart_code)
+    product = get_object_or_404(Product, id=product_id)
+
+  
+    cartitem, created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    if not created:
+        cartitem.quantity += quantity
+    else:
+        cartitem.quantity = quantity
+
+    cartitem.save()
+
+    serializer = CartItemSerializer(cartitem)
+    return Response(
+        {
+            "message": "Item added to cart successfully",
+            "cart_item": serializer.data
+        },
+        status=201
+    )
+
+   
+   
+   
+@api_view(['GET'])
+def product_in_cart(request):
+    cart_code = request.query_params.get("cart_code")
+    product_id = request.query_params.get("product_id")
+
+    if not cart_code or not product_id:
+        return Response(
+            {"error": "cart_code and product_id are required"},
+            status=400
+        )
+
+    cart = get_object_or_404(Cart, cart_code=cart_code)
+    product = get_object_or_404(Product, id=product_id)
+
+    product_exists_in_cart = CartItem.objects.filter(
+        cart=cart,
+        product=product
+    ).exists()
+
+    return Response({"product_in_cart": product_exists_in_cart})
+@api_view(['GET'])
+def get_cart_stat(request):
+     cart_code=request.query_params.get("cart_code")
+     cart=Cart.objects.get(cart_code=cart_code, paid=False)
+     serializer= SimpleCartSerializer(cart)
+     return Response(serializer.data)
+@api_view(['GET'])
+def get_cart(request):
+     cart_code=request.query_params.get("cart_code")
+     cart=Cart.objects.get(cart_code=cart_code, paid=False)
+     serializer=CartSerializer(cart)
+     return Response(serializer.data)
+@api_view(['PATCH'])
+def update_quantity(request):
+    try:
+          cartitem_id= request.data.get("item_id")
+          quantity = request.data.get("quantity")
+          quantity=int(quantity)
+          
+          if quantity <= 0:
+              # Remove item if quantity is 0 or less
+              cartitem = CartItem.objects.get(id=cartitem_id)
+              cartitem.delete()
+              return Response({"message": "Item removed from cart successfully!"})
+          
+          cartitem= CartItem.objects.get(id=cartitem_id)
+          cartitem.quantity=quantity
+          cartitem.save()
+          serializer = CartItemSerializer(cartitem)
+          return Response({"data":serializer.data, "message": "Cartitem updated successfully!"})
+    except Exception as e:
+         return Response({'error':str(e)}, status=400)
+
+@api_view(['POST'])
+def import_products(request):
+    from .serializers import DetailedProductSerializer
+
 
 
 

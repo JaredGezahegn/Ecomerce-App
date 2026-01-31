@@ -3,15 +3,38 @@ import RelatedProducts from './RelatedProduct';
 import ProductPagePlaceHolder from './ProductPagePlaceHolder';
 import { useParams } from "react-router-dom";
 import api from "../../api"
+import { useLang } from '../../context/LangContext';
 
 const ProductPage = ({ setNumberCartItems }) => {
-
+    const { t } = useLang();
     const { slug } = useParams();
     const [product, setProduct] = useState({});
     const [similarProducts, setSimilarProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [inCart, setInCart] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        return localStorage.getItem("theme") === "dark";
+    });
     const cart_code = localStorage.getItem("cart_code")
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setIsDarkMode(localStorage.getItem("theme") === "dark");
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        
+        const observer = new MutationObserver(() => {
+            setIsDarkMode(document.body.classList.contains('dark-theme'));
+        });
+        
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            observer.disconnect();
+        };
+    }, []);
 
     useEffect(function () {
 
@@ -87,7 +110,7 @@ const ProductPage = ({ setNumberCartItems }) => {
     }
 
     return (
-        <div className="mainProductContainer">
+        <div className={`mainProductContainer ${isDarkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
             <section className="py-3">
                 <div className="container px-4 px-lg-5 my-5">
                     <div className="row gx-4 gx-lg-5 align-items-center">
@@ -97,17 +120,20 @@ const ProductPage = ({ setNumberCartItems }) => {
                         </div>
                         <div className="col-md-6">
                             <div className="small mb-1">SKU: BST-498</div>
-                            <h1 className="display-5 fw-bolder">{product.name}</h1>
+                            <h1 className={`display-5 fw-bolder ${isDarkMode ? 'text-light' : 'text-dark'}`}>
+                                {product.name}
+                            </h1>
                             <div className="fs-5 mb-5">
-                                <span>{`$${product.price}`}</span>
+                                <span className={`${isDarkMode ? 'text-warning' : 'text-primary'} fw-bold`}>${product.price}</span>
                             </div>
-                            <p className="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent in neque et nisl.</p>
+                            <p className="lead">{product.description || t('product.description')}</p>
                             <div className="d-flex">
-                                <button className="btn btn-outline-dark flex-shrink-0" type="button"
+                                <button className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} flex-shrink-0`} 
+                                    type="button"
                                     onClick={add_item}
                                     disabled={inCart}>
                                     <i className="bi-cart-fill me-1"></i>
-                                    {inCart ? "Product added to cart" : "Add to cart"}
+                                    {inCart ? t('product.addedToCart') : t('product.addToCart')}
                                 </button>
                             </div>
                         </div>

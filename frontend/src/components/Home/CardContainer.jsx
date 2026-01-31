@@ -1,9 +1,12 @@
 import HomeCard from './HomeCard.jsx';
+import { useLang } from '../../context/LangContext';
 
 const CartContainer = ({products}) => {
+    const { t } = useLang();
+    
     return (
         <section className="py-5" id="shop">
-            <h4 style={{textAlign: "center"}}>Our Products</h4>
+            <h4 style={{textAlign: "center"}}>{t('home.featured')}</h4>
             <div className="container px-4 px-lg-5 mt-5">
                 <div className="row justify-content-center">
             {products.map(product => <HomeCard key={product.id} product={product} />)}
