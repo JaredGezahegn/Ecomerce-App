@@ -115,3 +115,31 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model= get_user_model()
         fields= ["id","username","first_name","last_name","email", "city", "state", "address", "phone"]
+
+
+class RegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=8)
+
+    class Meta:
+        model = get_user_model()
+        fields = ["id", "username", "password", "first_name", "last_name", "email", "city", "state", "address", "phone"]
+
+    def validate_username(self, value):
+        User = get_user_model()
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Username already taken")
+        return value
+
+    def validate_email(self, value):
+        User = get_user_model()
+        if value and User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email already registered")
+        return value
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        User = get_user_model()
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
