@@ -3,8 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from django.conf import settings
 
-from .models import Product, Cart, CartItem
+from .models import Product, Cart, CartItem, Transaction
 from .serializers import (
     CartSerializer,
     ProductSerializer,
@@ -14,7 +15,11 @@ from .serializers import (
     UserSerializer
 )
 
+from decimal import Decimal
+import uuid
+import requests
 
+BASE_URL = "http://localhost:5173"
 
 def home(request):
   return render(request, 'home.html')
@@ -178,61 +183,67 @@ def get_username(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def user_info(request):
+    user= request.user
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
-
-
-
-'''from django.shortcuts import render
-#from django.http import HttpResponse
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from .models import Product,Cart,CartItem
-from .serializers import CartSerializer,ProductSerializer,DetailedProductSerializer, CartItemSerializer, SimpleCartSerializer, UserSerializer
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
-
-
-# Create your views here.
-def home(request):
-    return render(request, 'home.html')
-
-#def home(request):
-    #return HttpResponse("Welcome to Shoppit!")
-
 @api_view(["GET"])
-def products(request):
-    products= Product.objects.all()
-    serializers= ProductSerializer(products, many=True)
-    return Response(serializers.data)
-@api_view(["GET"])
-def product_detail(request, slug):
-    product = get_object_or_404(
-        Product.objects.select_related("dimensions", "meta").prefetch_related("reviews"),
-        slug=slug
-    )
 
-   
-    similar_products = Product.objects.filter(
-        category=product.category
-    ).exclude(id=product.id)[:10]
- 
+@permission_classes([IsAuthenticated])
+def initiate_payment(request):
+    if request.user:
+        try:
+            tx_ref = str(uuid.uuid4())
+            cart_code = request.data.get("cart_code")
+            cart = Cart.objects.get(cart_code=cart_code)
+            user = request.user
 
-    
-    serializer = DetailedProductSerializer(
-        product,
-        context={
-            "similar_products": similar_products,
-            "request": request
-        }
-    )
+            # Ensure we sum with Decimal from the start to avoid mixing numeric types
+            amount = sum((item.quantity * item.product.price for item in cart.items.all()), Decimal('0.00'))
+            tax = Decimal("15.00")
+            total_amount = amount + tax
+            currency = "ETB"
+            redirect_url = f"{BASE_URL}/payment_status/"
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+            transaction = Transaction.objects.create(
+                ref=tx_ref,
+                cart=cart,
+                amount=total_amount,
+                currency=currency,
+                user=user,
+                status='pending'
+            )
+            flutterwave_payload = {
+                "tx_ref": tx_ref,
+                "amount": str(total_amount),
+                "currency": currency,
+                "redirect_url": redirect_url,
+                "customer": {
+                    "email": user.email,
+                    "name": user.username,
+                    "phonenumber": user.phone
 
- 
-@api_view(["POST"])
+                },
+                "customizations": {
+                    "title": "Shoppit Payment"
+                },
+            }
+
+            headers = {
+                "Authorization": f"Bearer {settings.FLUTTERWAVE_SECRET_KEY}",
+                "Content-Type": "application/json"
+            }
+            response = requests.post(
+                "https://api.flutterwave.com/v3/payments",
+                json=flutterwave_payload,
+                headers=headers
+            )
+            if response.status_code ==200:
+                return Response(response.json(), status=status.HTTP_200_OK)
+            else:
+                return Response(response.json(), status=response.status_code)
+        except requests.exceptions.RequestException as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 def add_item(request):
     cart_code = request.data.get("cart_code")
     product_id = request.data.get("product_id")
@@ -336,27 +347,7 @@ def update_quantity(request):
 def import_products(request):
     from .serializers import DetailedProductSerializer
 
-    products = request.data.get('products', [])
-    results = []
 
-    for item in products:
-        serializer = DetailedProductSerializer(data=item)
-        if serializer.is_valid():
-            serializer.save()
-            results.append({'name': item['title'], 'status': 'imported'})
-        else:
-            results.append({'name': item.get('title', 'Unknown'), 'errors': serializer.errors})
 
-    return Response(results)
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_username(request):
-     user= request.user
-     return Response({"username": user.username})
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def user_info(request):
-     user=request.user
-     serializer= UserSerializer(user)
-     return Response(serializer.data)'''
+

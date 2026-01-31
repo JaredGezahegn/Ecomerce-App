@@ -14,5 +14,5 @@ urlpatterns= [
     path("import-products/", import_products),
     path("get_username", views.get_username, name="get_username"),
     path("user_info/", views.user_info, name="user_info"),
-    
+    path("initiate_payment/", views.initiate_payment, name="initiate_payment"),
 ]

@@ -151,3 +151,5 @@ BASE_URL= 'HTTP://127.0.0.1:8001/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_AUTO_MODEL= 'django.db.models.BigAtoField'
 AUTH_USER_MODEL='core.CustomUser'
+
+FLUTTERWAVE_SECRET_KEY = "kaKyOg7hAjEQQRMvBsgcNBbEt0zs8JOo"
