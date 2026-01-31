@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Product, Cart, CartItem, Dimensions, MetaInfo, Review
 from rest_framework.fields import ImageField
 from django.contrib.auth import get_user_model
+from decimal import Decimal
 
 
 # Nested serializers for rich product data
@@ -27,9 +28,16 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 # Basic product serializer (used in cart items, listings)
 class ProductSerializer(serializers.ModelSerializer):
+    price_display = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = ["id", "name", "slug", "thumbnail", "description", "category", "price"]
+        fields = ["id", "name", "slug", "thumbnail", "description", "category", "price", "price_display"]
+
+    def get_price_display(self, obj):
+        price = obj.price.quantize(Decimal('0.01'))
+        s = format(price, 'f').rstrip('0').rstrip('.')
+        return f"{s} birr"
 
 # Detailed product serializer (for product detail view)
 class DetailedProductSerializer(serializers.ModelSerializer):
@@ -37,15 +45,21 @@ class DetailedProductSerializer(serializers.ModelSerializer):
     meta = MetaInfoSerializer()
     reviews = ReviewSerializer(many=True)
     similar_products = serializers.SerializerMethodField()
+    price_display = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = [
-            'id', 'name', 'slug', 'thumbnail', 'images', 'description', 'price',
+            'id', 'name', 'slug', 'thumbnail', 'images', 'description', 'price', 'price_display',
             'discountPercentage', 'rating', 'stock', 'tags', 'brand', 'sku', 'weight',
             'dimensions', 'warrantyInformation', 'shippingInformation', 'availabilityStatus',
             'reviews', 'returnPolicy', 'minimumOrderQuantity', 'meta', 'category','similar_products',
         ]
+
+    def get_price_display(self, obj):
+        price = obj.price.quantize(Decimal('0.01'))
+        s = format(price, 'f').rstrip('0').rstrip('.')
+        return f"{s} birr"
 
     '''def get_similar_products(self, obj):
        return ProductSerializer(
@@ -63,7 +77,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     total = serializers.SerializerMethodField()
 
-    class Meta:  # ✅ fixed typo from "meta" to "Meta"
+    class Meta:  
         model = CartItem
         fields = ["id", "quantity", "product", "total"]
 
