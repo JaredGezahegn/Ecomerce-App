@@ -6,6 +6,7 @@ import ProductPage from './components/product/ProductPage';
 import { useState, useEffect } from "react"
 import CartPage from './components/cart/CartPage';
 import api from './api';
+import { LangProvider } from './context/LangContext';
 
 
 function App() {
@@ -30,17 +31,19 @@ function App() {
   }, [])
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainLayout numCartItems={numCartItems} />}>
-          <Route index element={<Homepage />} />
-          <Route path="/products/:slug" element={<ProductPage setNumberCartItems={setNumberCartItems} />} />
-          <Route path="cart" element={<CartPage/>}/>
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
+    <LangProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainLayout numCartItems={numCartItems} />}>
+            <Route index element={<Homepage />} />
+            <Route path="/products/:slug" element={<ProductPage setNumberCartItems={setNumberCartItems} />} />
+            <Route path="cart" element={<CartPage/>}/>
+          </Route>
+          <Route path="*" element={<NotFoundPage />} />
 
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </LangProvider>
   );
 }
 

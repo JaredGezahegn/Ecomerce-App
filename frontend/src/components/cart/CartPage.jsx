@@ -2,9 +2,10 @@ import CartItem from "./CartItem"
 import CartSummary from "./CartSummary"
 import { useEffect, useState } from "react"
 import api from "../../api"
+import { useLang } from "../../context/LangContext"
 
 const CartPage = () => {
-
+    const { t } = useLang();
     const cart_code = localStorage.getItem("cart_code")
     const [cartitems, setCartItems] = useState([])
     const [cartTotal, setCartTotal] = useState(0.00)
@@ -48,15 +49,15 @@ const CartPage = () => {
         return (
             <div className="container my-5">
                 <div className="alert alert-primary text-center" role="alert">
-                    <h4>Your cart is empty</h4>
-                    <p>Add some products to get started!</p>
+                    <h4>{t('cart.empty')}</h4>
+                    <p>{t('cart.emptyDesc')}</p>
                 </div>
             </div>
         )
     }
     return (
         <div className="container my-3 py-3" style={{ height: "80vh", overflow: "scroll" }}>
-            <h5 className="mb-4">Shopping Cart</h5>
+            <h5 className="mb-4">{t('cart.title')}</h5>
             <div className="row">
                 <div className="col-md-8">
                     {cartitems.map(item => 

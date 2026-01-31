@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
+import { useLang } from "../../context/LangContext"
 
 const CartSummary = ({ cartTotal, tax }) => {
+    const { t } = useLang();
 
     const safeCartTotal = Number(cartTotal) || 0
     const safeTax = Number(tax) || 0
@@ -13,21 +15,21 @@ const CartSummary = ({ cartTotal, tax }) => {
         <div className="col-md-4 align-self-start">
             <div className="card">
                 <div className="card-body">
-                    <h5 className="card-title">Cart Summary</h5>
+                    <h5 className="card-title">{t('cart.summary')}</h5>
                     <hr />
 
                     <div className="d-flex justify-content-between">
-                        <span>Subtotal:</span>
+                        <span>{t('cart.subtotal')}:</span>
                         <span>${subTotal}</span>
                     </div>
 
                     <div className="d-flex justify-content-between">
-                        <span>Tax:</span>
+                        <span>{t('cart.tax')}:</span>
                         <span>${cartTax}</span>
                     </div>
 
                     <div className="d-flex justify-content-between mb-3">
-                        <span>Total:</span>
+                        <span>{t('cart.total')}:</span>
                         <strong>${total}</strong>
                     </div>
 
@@ -36,7 +38,7 @@ const CartSummary = ({ cartTotal, tax }) => {
                             className="btn btn-primary w-100"
                             style={{ backgroundColor: '#6050DC', borderColor: '#6050DC' }}
                         >
-                            Proceed to Checkout
+                            {t('cart.checkout')}
                         </button>
                     </Link>
                 </div>
