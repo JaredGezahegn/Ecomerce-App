@@ -298,6 +298,8 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
   const [mode, setMode] = useState(initialMode);
   const [message, setMessage] = useState('');
 
+  console.log('AuthModal props:', { isOpen, initialMode }); // Debug log
+
   const handleLoginSuccess = async () => {
     setMessage(t('auth.loginSuccess'));
     setTimeout(() => {
