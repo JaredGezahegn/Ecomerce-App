@@ -62,10 +62,15 @@ const NavBar = ({numCartItems}) => {
     <nav
       className={`navbar navbar-expand-lg shadow-sm py-3 ${isDarkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-white'
         } ${styles.stickyNav}`}>
-      <div className="container">
-        <Link className="navbar-brand fw-bold text-uppercase" to="/">
-          {t('brand.name')}
-        </Link>
+      <div className={`container ${styles.navbarContainer}`}>
+        {/* Left: Brand Name */}
+        <div className={styles.navBrand}>
+          <Link className={`navbar-brand fw-bold text-uppercase ${styles.brandLink}`} to="/">
+            {t('brand.name')}
+          </Link>
+        </div>
+
+        {/* Mobile Toggle Button */}
         <button
           className="navbar-toggler"
           type="button"
@@ -78,76 +83,79 @@ const NavBar = ({numCartItems}) => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="navbarContent">
-          <NavBarLink />
-          
-          <div className="d-flex align-items-center ms-auto">
-            {/* Cart Button - Only show for authenticated users */}
-            {isAuthenticated && (
-              <Link to="/cart" className={`btn me-3 rounded-pill position-relative ${styles.responsiveCart} ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'}`}>
-                <FaShoppingCart size={20} className={isDarkMode ? 'text-light' : 'text-dark'} />
-                {numCartItems > 0 && (
-                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {numCartItems}
-                  </span>
-                )}
-              </Link>
-            )}
-
-            {/* Language Toggle */}
-            <button
-              onClick={toggleLanguage}
-              className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 rounded-circle`}
-              title={language === 'en' ? 'Switch to Amharic' : 'Switch to English'}
-            >
-              <FaGlobe size={18} />
-              <small className="ms-1">{language.toUpperCase()}</small>
-            </button>
-
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-3 rounded-circle`}
-              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {isDarkMode ? <FaSun size={18} /> : <FaMoon size={18} />}
-            </button>
-
-            {/* Authentication Section */}
-            {isAuthenticated ? (
-              <div className="d-flex align-items-center">
-                <Link 
-                  to="/profile" 
-                  className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2`}
-                >
-                  <FaUser size={16} className="me-1" />
-                  {user?.first_name || user?.username}
-                </Link>
-                <button
-                  className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'}`}
-                  onClick={handleLogout}
-                >
-                  {t('auth.logout')}
-                </button>
-              </div>
-            ) : (
-              <>
-                <button
-                  className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2`}
-                  onClick={handleLogin}
-                >
-                  {t('auth.login')}
-                </button>
-                <button
-                  className="btn btn-primary"
-                  style={{ backgroundColor: '#6050DC', borderColor: '#6050DC' }}
-                  onClick={handleSignup}
-                >
-                  {t('auth.signup')}
-                </button>
-              </>
-            )}
+        {/* Center: Navigation Links */}
+        <div className={`collapse navbar-collapse ${styles.navCenter}`} id="navbarContent">
+          <div className={styles.navLinksWrapper}>
+            <NavBarLink />
           </div>
+        </div>
+
+        {/* Right: Actions */}
+        <div className={`${styles.navActions} d-flex align-items-center`}>
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.actionBtn}`}
+            title={language === 'en' ? 'Switch to Amharic' : 'Switch to English'}
+          >
+            <FaGlobe size={16} />
+            <small className="ms-1">{language.toUpperCase()}</small>
+          </button>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.actionBtn}`}
+            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {isDarkMode ? <FaSun size={16} /> : <FaMoon size={16} />}
+          </button>
+
+          {/* Cart Button - Only show for authenticated users */}
+          {isAuthenticated && (
+            <Link to="/cart" className={`btn me-2 position-relative ${styles.responsiveCart} ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'}`}>
+              <FaShoppingCart size={16} className={isDarkMode ? 'text-light' : 'text-dark'} />
+              {numCartItems > 0 && (
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {numCartItems}
+                </span>
+              )}
+            </Link>
+          )}
+
+          {/* Authentication Section */}
+          {isAuthenticated ? (
+            <div className="d-flex align-items-center">
+              <Link 
+                to="/profile" 
+                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.actionBtn}`}
+              >
+                <FaUser size={14} className="me-1" />
+                {user?.first_name || user?.username}
+              </Link>
+              <button
+                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} ${styles.actionBtn}`}
+                onClick={handleLogout}
+              >
+                {t('auth.logout')}
+              </button>
+            </div>
+          ) : (
+            <div className={styles.authButtons}>
+              <button
+                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.loginBtn}`}
+                onClick={handleLogin}
+              >
+                {t('auth.login')}
+              </button>
+              <button
+                className={`btn btn-primary ${styles.signupBtn}`}
+                onClick={handleSignup}
+              >
+                {t('auth.signup')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
