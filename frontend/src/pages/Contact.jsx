@@ -1,6 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLang } from '../context/LangContext';
 import './Contact.css';
+import { 
+  FaCheckCircle, 
+  FaPaperPlane, 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaEnvelope, 
+  FaClock,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn
+} from 'react-icons/fa';
 
 const Contact = () => {
   const { t } = useLang();
@@ -61,7 +73,7 @@ const Contact = () => {
                 
                 {submitStatus === 'success' && (
                   <div className="alert alert-success" role="alert">
-                    <i className="fas fa-check-circle me-2"></i>
+                    <FaCheckCircle className="me-2" />
                     {t('contact.form.success')}
                   </div>
                 )}
@@ -140,7 +152,7 @@ const Contact = () => {
                       </>
                     ) : (
                       <>
-                        <i className="fas fa-paper-plane me-2"></i>
+                        <FaPaperPlane className="me-2" />
                         {t('contact.form.send')}
                       </>
                     )}
@@ -157,7 +169,7 @@ const Contact = () => {
                 
                 <div className="contact-item">
                   <div className="contact-icon">
-                    <i className="fas fa-map-marker-alt"></i>
+                    <FaMapMarkerAlt />
                   </div>
                   <div className="contact-details">
                     <h5>{t('contact.info.address.title')}</h5>
@@ -167,7 +179,7 @@ const Contact = () => {
                 
                 <div className="contact-item">
                   <div className="contact-icon">
-                    <i className="fas fa-phone"></i>
+                    <FaPhone />
                   </div>
                   <div className="contact-details">
                     <h5>{t('contact.info.phone.title')}</h5>
@@ -177,7 +189,7 @@ const Contact = () => {
                 
                 <div className="contact-item">
                   <div className="contact-icon">
-                    <i className="fas fa-envelope"></i>
+                    <FaEnvelope />
                   </div>
                   <div className="contact-details">
                     <h5>{t('contact.info.email.title')}</h5>
@@ -187,7 +199,7 @@ const Contact = () => {
                 
                 <div className="contact-item">
                   <div className="contact-icon">
-                    <i className="fas fa-clock"></i>
+                    <FaClock />
                   </div>
                   <div className="contact-details">
                     <h5>{t('contact.info.hours.title')}</h5>
@@ -199,16 +211,16 @@ const Contact = () => {
                   <h5>{t('contact.social.title')}</h5>
                   <div className="social-icons">
                     <a href="#" className="social-link">
-                      <i className="fab fa-facebook-f"></i>
+                      <FaFacebookF />
                     </a>
                     <a href="#" className="social-link">
-                      <i className="fab fa-twitter"></i>
+                      <FaTwitter />
                     </a>
                     <a href="#" className="social-link">
-                      <i className="fab fa-instagram"></i>
+                      <FaInstagram />
                     </a>
                     <a href="#" className="social-link">
-                      <i className="fab fa-linkedin-in"></i>
+                      <FaLinkedinIn />
                     </a>
                   </div>
                 </div>

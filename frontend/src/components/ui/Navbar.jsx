@@ -34,13 +34,11 @@ const NavBar = ({numCartItems}) => {
   };
 
   const handleLogin = () => {
-    console.log('Login button clicked'); // Debug log
     setAuthMode('login');
     setShowAuthModal(true);
   };
 
   const handleSignup = () => {
-    console.log('Signup button clicked'); // Debug log
     setAuthMode('signup');
     setShowAuthModal(true);
   };

@@ -118,7 +118,7 @@ export const LangProvider = ({ children }) => {
         'auth.welcome': 'Welcome back!',
 
         // About Page
-        'about.title': 'About SHOPPIT',
+        'about.title': 'About Us',
         'about.subtitle': 'Your trusted partner for quality products and exceptional service',
         'about.customers': 'Happy Customers',
         'about.products': 'Products',
@@ -135,6 +135,8 @@ export const LangProvider = ({ children }) => {
         'about.team.description': 'Passionate professionals dedicated to your satisfaction',
         'about.team.ceo': 'Chief Executive Officer',
         'about.team.cto': 'Chief Technology Officer',
+        'about.team.frontend': 'Frontend Developer',
+        'about.team.backend': 'Backend Django Developer',
         'about.team.marketing': 'Marketing Director',
         'about.values.title': 'Our Values',
         'about.values.customer.title': 'Customer First',
@@ -279,7 +281,7 @@ export const LangProvider = ({ children }) => {
         'auth.welcome': 'እንኳን ደህና መጡ!',
 
         // About Page
-        'about.title': 'ስለ ባለ ሱቅ',
+        'about.title': 'ስለ እኛ',
         'about.subtitle': 'ለጥራት ምርቶች እና ልዩ አገልግሎት የታመነ አጋርዎ',
         'about.customers': 'ደስተኛ ደንበኞች',
         'about.products': 'ምርቶች',
@@ -296,6 +298,8 @@ export const LangProvider = ({ children }) => {
         'about.team.description': 'ለእርስዎ እርካታ የተወሰኑ ፍቅረኛ ባለሙያዎች',
         'about.team.ceo': 'ዋና ሥራ አስፈፃሚ',
         'about.team.cto': 'ዋና ቴክኖሎጂ ኃላፊ',
+        'about.team.frontend': 'የፊት ጫፍ ገንቢ',
+        'about.team.backend': 'የኋላ ጫፍ ዳንጎ ገንቢ',
         'about.team.marketing': 'የማርኬቲንግ ዳይሬክተር',
         'about.values.title': 'የእኛ እሴቶች',
         'about.values.customer.title': 'ደንበኛ በመጀመሪያ',

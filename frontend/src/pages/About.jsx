@@ -1,15 +1,90 @@
-import React from 'react';
 import { useLang } from '../context/LangContext';
+import { useEffect } from 'react';
 import './About.css';
+import yaredPhoto from '../assets/yared-gezahegn.png';
+import yosefPhoto from '../assets/yosef-abire.jpg';
+import { 
+  FaTruck, 
+  FaAward, 
+  FaPhone, 
+  FaUsers, 
+  FaSeedling, 
+  FaRocket, 
+  FaShieldAlt,
+  FaLinkedin,
+  FaGithub
+} from 'react-icons/fa';
 
 const About = () => {
   const { t } = useLang();
+
+  useEffect(() => {
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+
+    const nextSlide = () => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    };
+
+    const slideInterval = setInterval(nextSlide, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(slideInterval);
+  }, []);
 
   return (
     <div className="about-page">
       {/* Hero Section */}
       <section className="about-hero">
-        <div className="container">
+        <div className="hero-slideshow">
+          <div className="slideshow-container">
+            <div className="slide active">
+              <img 
+                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+                alt="Nike Shoes" 
+                className="slide-image"
+              />
+            </div>
+            <div className="slide">
+              <img 
+                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+                alt="Smart Watch" 
+                className="slide-image"
+              />
+            </div>
+            <div className="slide">
+              <img 
+                src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+                alt="Sunglasses" 
+                className="slide-image"
+              />
+            </div>
+            <div className="slide">
+              <img 
+                src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+                alt="Designer Bag" 
+                className="slide-image"
+              />
+            </div>
+            <div className="slide">
+              <img 
+                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+                alt="Headphones" 
+                className="slide-image"
+              />
+            </div>
+            <div className="slide">
+              <img 
+                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+                alt="Fashion Clothing" 
+                className="slide-image"
+              />
+            </div>
+          </div>
+          <div className="slideshow-overlay"></div>
+        </div>
+        <div className="container hero-content">
           <div className="row align-items-center min-vh-50">
             <div className="col-lg-6">
               <h1 className="about-title">{t('about.title')}</h1>
@@ -30,13 +105,7 @@ const About = () => {
               </div>
             </div>
             <div className="col-lg-6">
-              <div className="about-image">
-                <img 
-                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                  alt="About Us" 
-                  className="img-fluid rounded-4 shadow-lg"
-                />
-              </div>
+              {/* Content can be added here if needed */}
             </div>
           </div>
         </div>
@@ -55,7 +124,7 @@ const About = () => {
             <div className="col-md-4">
               <div className="feature-card">
                 <div className="feature-icon">
-                  <i className="fas fa-shipping-fast"></i>
+                  <FaTruck />
                 </div>
                 <h4>{t('about.features.shipping.title')}</h4>
                 <p>{t('about.features.shipping.description')}</p>
@@ -64,7 +133,7 @@ const About = () => {
             <div className="col-md-4">
               <div className="feature-card">
                 <div className="feature-icon">
-                  <i className="fas fa-shield-alt"></i>
+                  <FaAward />
                 </div>
                 <h4>{t('about.features.quality.title')}</h4>
                 <p>{t('about.features.quality.description')}</p>
@@ -73,7 +142,7 @@ const About = () => {
             <div className="col-md-4">
               <div className="feature-card">
                 <div className="feature-icon">
-                  <i className="fas fa-headset"></i>
+                  <FaPhone />
                 </div>
                 <h4>{t('about.features.support.title')}</h4>
                 <p>{t('about.features.support.description')}</p>
@@ -93,59 +162,48 @@ const About = () => {
             </div>
           </div>
           <div className="row mt-5">
-            <div className="col-md-4">
+            <div className="col-md-6">
               <div className="team-card">
                 <div className="team-image">
                   <img 
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" 
-                    alt="CEO" 
+                    src={yaredPhoto}
+                    alt="Frontend Developer" 
                     className="img-fluid"
                   />
                 </div>
                 <div className="team-info">
-                  <h5>John Doe</h5>
-                  <p className="team-role">{t('about.team.ceo')}</p>
+                  <h5>Yared Gezahegn</h5>
+                  <p className="team-role">{t('about.team.frontend')}</p>
                   <div className="team-social">
-                    <a href="#"><i className="fab fa-linkedin"></i></a>
-                    <a href="#"><i className="fab fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/in/yared-gezahegn-224368388/" target="_blank" rel="noopener noreferrer">
+                      <FaLinkedin />
+                    </a>
+                    <a href="https://github.com/JaredGezahegn" target="_blank" rel="noopener noreferrer">
+                      <FaGithub />
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-6">
               <div className="team-card">
                 <div className="team-image">
                   <img 
-                    src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" 
-                    alt="CTO" 
+                    src={yosefPhoto}
+                    alt="Backend Developer" 
                     className="img-fluid"
                   />
                 </div>
                 <div className="team-info">
-                  <h5>Jane Smith</h5>
-                  <p className="team-role">{t('about.team.cto')}</p>
+                  <h5>Yosef Abire</h5>
+                  <p className="team-role">{t('about.team.backend')}</p>
                   <div className="team-social">
-                    <a href="#"><i className="fab fa-linkedin"></i></a>
-                    <a href="#"><i className="fab fa-github"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="team-card">
-                <div className="team-image">
-                  <img 
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" 
-                    alt="Marketing Director" 
-                    className="img-fluid"
-                  />
-                </div>
-                <div className="team-info">
-                  <h5>Mike Johnson</h5>
-                  <p className="team-role">{t('about.team.marketing')}</p>
-                  <div className="team-social">
-                    <a href="#"><i className="fab fa-linkedin"></i></a>
-                    <a href="#"><i className="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/yosef-abire-4a5841394" target="_blank" rel="noopener noreferrer">
+                      <FaLinkedin />
+                    </a>
+                    <a href="https://github.com/YosefAbire" target="_blank" rel="noopener noreferrer">
+                      <FaGithub />
+                    </a>
                   </div>
                 </div>
               </div>
@@ -166,7 +224,7 @@ const About = () => {
             <div className="col-md-6">
               <div className="value-card">
                 <div className="value-icon">
-                  <i className="fas fa-heart"></i>
+                  <FaUsers />
                 </div>
                 <div className="value-content">
                   <h4>{t('about.values.customer.title')}</h4>
@@ -177,7 +235,7 @@ const About = () => {
             <div className="col-md-6">
               <div className="value-card">
                 <div className="value-icon">
-                  <i className="fas fa-leaf"></i>
+                  <FaSeedling />
                 </div>
                 <div className="value-content">
                   <h4>{t('about.values.sustainability.title')}</h4>
@@ -188,7 +246,7 @@ const About = () => {
             <div className="col-md-6">
               <div className="value-card">
                 <div className="value-icon">
-                  <i className="fas fa-lightbulb"></i>
+                  <FaRocket />
                 </div>
                 <div className="value-content">
                   <h4>{t('about.values.innovation.title')}</h4>
@@ -199,7 +257,7 @@ const About = () => {
             <div className="col-md-6">
               <div className="value-card">
                 <div className="value-icon">
-                  <i className="fas fa-handshake"></i>
+                  <FaShieldAlt />
                 </div>
                 <div className="value-content">
                   <h4>{t('about.values.integrity.title')}</h4>
