@@ -5,11 +5,16 @@ import NotFoundPage from './components/ui/NotFoundPage';
 import ProductPage from './components/product/ProductPage';
 import { useState, useEffect } from "react"
 import CartPage from './components/cart/CartPage';
+import Profile from './pages/Profile';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import api from './api';
+import { LangProvider } from './context/LangContext';
+import { AuthProvider } from './context/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 
 function App() {
-
   const [numCartItems, setNumberCartItems] = useState(0);
   const cart_code = localStorage.getItem("cart_code")
 
@@ -30,17 +35,26 @@ function App() {
   }, [])
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainLayout numCartItems={numCartItems} />}>
-          <Route index element={<Homepage />} />
-          <Route path="/products/:slug" element={<ProductPage setNumberCartItems={setNumberCartItems} />} />
-          <Route path="cart" element={<CartPage/>}/>
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <LangProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<MainLayout numCartItems={numCartItems} />}>
+                <Route index element={<Homepage />} />
+                <Route path="/products/:slug" element={<ProductPage setNumberCartItems={setNumberCartItems} />} />
+                <Route path="cart" element={<CartPage/>}/>
+                <Route path="profile" element={<Profile/>}/>
+                <Route path="about" element={<About/>}/>
+                <Route path="contact" element={<Contact/>}/>
+              </Route>
+              <Route path="*" element={<NotFoundPage />} />
 
-      </Routes>
-    </Router>
+            </Routes>
+          </Router>
+        </LangProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
