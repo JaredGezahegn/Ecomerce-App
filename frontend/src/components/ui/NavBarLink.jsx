@@ -10,7 +10,7 @@ const NavBarLink = () => {
          <Link to="/" className="nav-link active fw-semibold">{t('nav.home')}</Link>
          </li>
          <li className="nav-item">
-            <Link to="/profiles" className="nav-link fw-semibold">{t('nav.products')}</Link>
+            <a href="#shop" className="nav-link fw-semibold">{t('nav.products')}</a>
             </li>
             <li className="nav-item">
                 <Link to="/about" className="nav-link fw-semibold">{t('nav.about')}</Link>
