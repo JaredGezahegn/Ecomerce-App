@@ -12,8 +12,10 @@ from .serializers import (
     DetailedProductSerializer,
     CartItemSerializer,
     SimpleCartSerializer,
-    UserSerializer
+    UserSerializer,
+    RegistrationSerializer,
 )
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from decimal import Decimal
 import uuid
@@ -187,167 +189,136 @@ def user_info(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
-@api_view(["GET"])
 
+@api_view(["POST"])
+def register(request):
+    """Register a new user and return JWT tokens."""
+    serializer = RegistrationSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "user": UserSerializer(user).data,
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def initiate_payment(request):
-    if request.user:
-        try:
-            tx_ref = str(uuid.uuid4())
-            cart_code = request.data.get("cart_code")
-            cart = Cart.objects.get(cart_code=cart_code)
-            user = request.user
-
-            # Ensure we sum with Decimal from the start to avoid mixing numeric types
-            amount = sum((item.quantity * item.product.price for item in cart.items.all()), Decimal('0.00'))
-            tax = Decimal("15.00")
-            total_amount = amount + tax
-            currency = "ETB"
-            redirect_url = f"{BASE_URL}/payment_status/"
-
-            transaction = Transaction.objects.create(
-                ref=tx_ref,
-                cart=cart,
-                amount=total_amount,
-                currency=currency,
-                user=user,
-                status='pending'
-            )
-            flutterwave_payload = {
-                "tx_ref": tx_ref,
-                "amount": str(total_amount),
-                "currency": currency,
-                "redirect_url": redirect_url,
-                "customer": {
-                    "email": user.email,
-                    "name": user.username,
-                    "phonenumber": user.phone
-
-                },
-                "customizations": {
-                    "title": "Shoppit Payment"
-                },
-            }
-
-            headers = {
-                "Authorization": f"Bearer {settings.FLUTTERWAVE_SECRET_KEY}",
-                "Content-Type": "application/json"
-            }
-            response = requests.post(
-                "https://api.flutterwave.com/v3/payments",
-                json=flutterwave_payload,
-                headers=headers
-            )
-            if response.status_code ==200:
-                return Response(response.json(), status=status.HTTP_200_OK)
-            else:
-                return Response(response.json(), status=response.status_code)
-        except requests.exceptions.RequestException as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-def add_item(request):
+    tx_ref = str(uuid.uuid4())
     cart_code = request.data.get("cart_code")
-    product_id = request.data.get("product_id")
-    quantity = request.data.get("quantity", 1)  
+    if not cart_code:
+        return Response({"error": "cart_code is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    
-    if not cart_code or not product_id:
-        return Response(
-            {"error": "cart_code and product_id are required"},
-            status=400
-        )
-
- 
     try:
-        quantity = int(quantity)
-        if quantity < 1:
-            return Response({"error": "quantity must be at least 1"}, status=400)
-    except:
-        return Response({"error": "quantity must be a number"}, status=400)
+        cart = Cart.objects.get(cart_code=cart_code, paid=False)
+    except Cart.DoesNotExist:
+        return Response({"error": "Cart not found or already paid"}, status=status.HTTP_404_NOT_FOUND)
 
-    
-    cart, _ = Cart.objects.get_or_create(cart_code=cart_code)
-    product = get_object_or_404(Product, id=product_id)
+    user = request.user
 
-  
-    cartitem, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    # Sum amounts using Decimal
+    amount = sum((item.quantity * item.product.price for item in cart.items.all()), Decimal("0.00"))
+    tax = Decimal("15.00")
+    total_amount = amount + tax
+    currency = "ETB"
+    redirect_url = f"{BASE_URL}/payment_status/"
 
-    if not created:
-        cartitem.quantity += quantity
-    else:
-        cartitem.quantity = quantity
-
-    cartitem.save()
-
-    serializer = CartItemSerializer(cartitem)
-    return Response(
-        {
-            "message": "Item added to cart successfully",
-            "cart_item": serializer.data
-        },
-        status=201
+    transaction = Transaction.objects.create(
+        ref=tx_ref,
+        cart=cart,
+        amount=total_amount,
+        currency=currency,
+        user=user,
+        status='pending'
     )
 
-   
-   
-   
-@api_view(['GET'])
-def product_in_cart(request):
-    cart_code = request.query_params.get("cart_code")
-    product_id = request.query_params.get("product_id")
+    flutterwave_payload = {
+        "tx_ref": tx_ref,
+        "amount": str(total_amount),
+        "currency": currency,
+        "redirect_url": redirect_url,
+        "customer": {
+            "email": getattr(user, "email", ""),
+            "name": getattr(user, "username", ""),
+            "phonenumber": getattr(user, "phone", "")
+        },
+        "customizations": {"title": "Shoppit Payment"},
+    }
 
-    if not cart_code or not product_id:
-        return Response(
-            {"error": "cart_code and product_id are required"},
-            status=400
-        )
+    headers = {
+        "Authorization": f"Bearer {settings.FLUTTERWAVE_SECRET_KEY}",
+        "Content-Type": "application/json",
+    }
 
-    cart = get_object_or_404(Cart, cart_code=cart_code)
-    product = get_object_or_404(Product, id=product_id)
-
-    product_exists_in_cart = CartItem.objects.filter(
-        cart=cart,
-        product=product
-    ).exists()
-
-    return Response({"product_in_cart": product_exists_in_cart})
-@api_view(['GET'])
-def get_cart_stat(request):
-     cart_code=request.query_params.get("cart_code")
-     cart=Cart.objects.get(cart_code=cart_code, paid=False)
-     serializer= SimpleCartSerializer(cart)
-     return Response(serializer.data)
-@api_view(['GET'])
-def get_cart(request):
-     cart_code=request.query_params.get("cart_code")
-     cart=Cart.objects.get(cart_code=cart_code, paid=False)
-     serializer=CartSerializer(cart)
-     return Response(serializer.data)
-@api_view(['PATCH'])
-def update_quantity(request):
     try:
-          cartitem_id= request.data.get("item_id")
-          quantity = request.data.get("quantity")
-          quantity=int(quantity)
-          
-          if quantity <= 0:
-              # Remove item if quantity is 0 or less
-              cartitem = CartItem.objects.get(id=cartitem_id)
-              cartitem.delete()
-              return Response({"message": "Item removed from cart successfully!"})
-          
-          cartitem= CartItem.objects.get(id=cartitem_id)
-          cartitem.quantity=quantity
-          cartitem.save()
-          serializer = CartItemSerializer(cartitem)
-          return Response({"data":serializer.data, "message": "Cartitem updated successfully!"})
-    except Exception as e:
-         return Response({'error':str(e)}, status=400)
+        resp = requests.post(
+            "https://api.flutterwave.com/v3/payments",
+            json=flutterwave_payload,
+            headers=headers,
+            timeout=10,
+        )
+        resp.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        # Mark transaction as failed if external call failed
+        transaction.status = "failed"
+        transaction.save()
+        return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
 
-@api_view(['POST'])
-def import_products(request):
-    from .serializers import DetailedProductSerializer
+    # Return the flutterwave response plus our transaction ref for client usage
+    return Response({"tx_ref": tx_ref, "flutterwave": resp.json()}, status=resp.status_code)
+@api_view(["GET", "POST"])
+def payment_callback(request):
+    status_param = request.GET.get("status") or request.data.get("status")
+    tx_ref = request.GET.get("tx_ref") or request.data.get("tx_ref")
+    transaction_id = request.GET.get("transaction_id") or request.data.get("transaction_id")
 
+    if not tx_ref or not transaction_id:
+        return Response({"error": "tx_ref and transaction_id are required"}, status=status.HTTP_400_BAD_REQUEST)
 
+    if status_param != "successful":
+        return Response({"message": "payment was not successful"}, status=status.HTTP_400_BAD_REQUEST)
 
+    headers = {"Authorization": f"Bearer {settings.FLUTTERWAVE_SECRET_KEY}"}
+
+    try:
+        resp = requests.get(f"https://api.flutterwave.com/v3/transactions/{transaction_id}/verify", headers=headers, timeout=10)
+        resp.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
+
+    resp_data = resp.json()
+    if resp_data.get("status") != "success":
+        return Response({"message": "failed to verify with flutterwave", "response": resp_data}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        transaction = Transaction.objects.get(ref=tx_ref)
+    except Transaction.DoesNotExist:
+        return Response({"error": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    data = resp_data.get("data", {})
+
+    try:
+        amount_received = Decimal(str(data.get("amount")))
+    except Exception:
+        amount_received = None
+
+    if data.get("status") == "successful" and amount_received == transaction.amount and data.get("currency") == transaction.currency:
+        transaction.status = "successful"
+        transaction.save()
+
+        cart = transaction.cart
+        cart.paid = True
+        # Preserve associated user if available
+        if not cart.user and transaction.user:
+            cart.user = transaction.user
+        cart.save()
+
+        return Response({"message": "payment successful", "subMessage": "You have successfully made payment for your cart items."}, status=status.HTTP_200_OK)
+
+    return Response({"message": "payment verification failed", "details": data}, status=status.HTTP_400_BAD_REQUEST)    
 
 
