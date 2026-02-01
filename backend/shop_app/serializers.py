@@ -113,33 +113,62 @@ class SimpleCartSerializer(serializers.ModelSerializer):
     
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model= get_user_model()
-        fields= ["id","username","first_name","last_name","email", "city", "state", "address", "phone"]
+        model = get_user_model()
+        # Keep fields small and explicit to avoid leaking sensitive data
+        fields = ["id", "username", "first_name", "last_name", "email", "city", "state", "address", "phone"]
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    # Accept password confirmation and do strong validation using Django's
+    # password validators for production-ready rules.
     password = serializers.CharField(write_only=True, min_length=8)
+    password2 = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
         model = get_user_model()
-        fields = ["id", "username", "password", "first_name", "last_name", "email", "city", "state", "address", "phone"]
-
-    def validate_username(self, value):
-        User = get_user_model()
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Username already taken")
-        return value
+        fields = [
+            "id",
+            "email",
+            "username",
+            "password",
+            "password2",
+            "first_name",
+            "last_name",
+            "city",
+            "state",
+            "address",
+            "phone",
+        ]
 
     def validate_email(self, value):
         User = get_user_model()
-        if value and User.objects.filter(email=value).exists():
+        if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError("Email already registered")
         return value
 
+    def validate_username(self, value):
+        User = get_user_model()
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("Username already taken")
+        return value
+
+    def validate(self, data):
+        # Confirm passwords match
+        if data.get("password") != data.get("password2"):
+            raise serializers.ValidationError({"password": "Passwords do not match."})
+
+        # Use Django's built-in password validators for production-quality checks
+        from django.contrib.auth.password_validation import validate_password
+        validate_password(data.get("password"))
+
+        return data
+
     def create(self, validated_data):
+        validated_data.pop("password2", None)
         password = validated_data.pop("password")
         User = get_user_model()
         user = User(**validated_data)
+        # Use set_password to hash using configured PASSWORD_HASHERS
         user.set_password(password)
         user.save()
         return user
