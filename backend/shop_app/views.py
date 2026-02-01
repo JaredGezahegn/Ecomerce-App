@@ -1,9 +1,29 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser, BaseParser
+import json
+
+
+class JSONTextParser(BaseParser):
+    """Parser that accepts text/plain and attempts to parse JSON from it.
+
+    Use-case: some clients (curl defaults, misconfigured tools, or simple scripts)
+    send JSON but set Content-Type to "text/plain". Without this parser the
+    request is rejected with 415 Unsupported Media Type. This parser
+    gracefully attempts to parse JSON and falls back to returning raw text.
+    """
+    media_type = 'text/plain'
+
+    def parse(self, stream, media_type=None, parser_context=None):
+        raw = stream.read().decode('utf-8')
+        try:
+            return json.loads(raw)
+        except Exception:
+            return {"text": raw}
 
 from .models import Product, Cart, CartItem, Transaction
 from .serializers import (
@@ -16,6 +36,9 @@ from .serializers import (
     RegistrationSerializer,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth import get_user_model
 
 from decimal import Decimal
 import uuid
@@ -190,20 +213,63 @@ def user_info(request):
     return Response(serializer.data)
 
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """Token serializer that authenticates with `email` as USERNAME_FIELD.
+
+    We keep this class so the front-end can POST `{ "email": "..", "password": ".." }`
+    and receive an access + refresh token pair as well as basic user info.
+    """
+
+    username_field = get_user_model().USERNAME_FIELD
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["email"] = user.email
+        token["username"] = user.username
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data.update({"user": UserSerializer(self.user).data})
+        return data
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    # Allow unauthenticated users to obtain tokens
+    permission_classes = [AllowAny]
+    serializer_class = CustomTokenObtainPairSerializer
+
+
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def register(request):
-    """Register a new user and return JWT tokens."""
+    """Register a new user and return JWT tokens.
+
+    This endpoint uses `RegistrationSerializer` for validation and returns
+    both access and refresh tokens on success so the front-end can immediately
+    authenticate the user. It must be public (AllowAny) because unauthenticated
+    users need to create accounts.
+    """
     serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
         return Response({
             "user": UserSerializer(user).data,
-            "access": str(refresh.access_token),
             "refresh": str(refresh),
+            "access": str(refresh.access_token),
         }, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def me(request):
+    """Return the authenticated user's profile."""
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
