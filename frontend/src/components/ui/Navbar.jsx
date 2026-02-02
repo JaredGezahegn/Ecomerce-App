@@ -34,11 +34,13 @@ const NavBar = ({numCartItems}) => {
   };
 
   const handleLogin = () => {
+    console.log('Login button clicked - setting mode to login');
     setAuthMode('login');
     setShowAuthModal(true);
   };
 
   const handleSignup = () => {
+    console.log('Signup button clicked - setting mode to signup');
     setAuthMode('signup');
     setShowAuthModal(true);
   };
@@ -49,6 +51,8 @@ const NavBar = ({numCartItems}) => {
 
   const closeAuthModal = () => {
     setShowAuthModal(false);
+    // Reset auth mode when closing
+    setAuthMode('login');
   };
 
   // Clear language localStorage to force Amharic default
