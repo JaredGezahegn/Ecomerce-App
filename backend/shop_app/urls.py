@@ -14,11 +14,8 @@ urlpatterns= [
     path("import-products/", import_products),
     path("get_username", views.get_username, name="get_username"),
     path("user_info/", views.user_info, name="user_info"),
-    # Public registration endpoint (keeps backward compatibility with old route)
     path("register/", views.register, name="register"),
-    # Frontend expects this path for signup; provide it too
     path("auth/register/", views.register, name="auth_register"),
-    # Authenticated profile endpoint
     path("me/", views.me, name="me"),
     path("initiate_payment/", views.initiate_payment, name="initiate_payment"),
     path("payment_callback/", views.payment_callback, name="payment_callback")
