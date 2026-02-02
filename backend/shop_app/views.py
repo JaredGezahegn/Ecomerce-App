@@ -51,6 +51,7 @@ def home(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def products(request):
     products = Product.objects.all()
     serializer = ProductSerializer(products, many=True)
@@ -58,6 +59,7 @@ def products(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def product_detail(request, slug):
     product = get_object_or_404(
         Product.objects.select_related("dimensions", "meta")
@@ -81,6 +83,7 @@ def product_detail(request, slug):
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def add_item(request):
     cart_code = request.data.get("cart_code")
     product_id = request.data.get("product_id")
@@ -119,6 +122,7 @@ def add_item(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def product_in_cart(request):
     cart_code = request.query_params.get("cart_code")
     product_id = request.query_params.get("product_id")
@@ -142,6 +146,7 @@ def product_in_cart(request):
     return Response({"product_in_cart": exists})
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_cart_stat(request):
     cart_code = request.query_params.get("cart_code")
     cart = get_object_or_404(Cart, cart_code=cart_code, paid=False)
@@ -149,6 +154,7 @@ def get_cart_stat(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_cart(request):
     cart_code = request.query_params.get("cart_code")
     cart = get_object_or_404(Cart, cart_code=cart_code, paid=False)
