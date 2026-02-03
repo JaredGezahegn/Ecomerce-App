@@ -4,4 +4,25 @@ db.sqlite3
 .env
 venv/
 node_modules/
-FLUTTERWAVE_SECRET_KEY
+.DS_Store
+*.Log
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+db.sqlite3
+*.log
+*.pot
+*.py[cod]
+*.sqlite3
+
+# Virtual environment
+shopenv/
+env/
+venv/
+
+# Django migrations (optional if you want them tracked)
+*/migrations/*.pyc

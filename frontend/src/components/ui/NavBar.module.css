@@ -22,19 +22,204 @@ body {
 }
 
 /* Sticky Navbar */
-.stickyNavbar {
+.stickyNav {
   position: sticky !important;
   top: 0;
   z-index: 1030;
   background-color: var(--navbar-bg) !important;
   color: var(--navbar-text) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  /* subtle divider in dark mode */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* Ensure Navbar Links Follow Theme */
-.stickyNavbar a,
-.stickyNavbar .nav-link,
-.stickyNavbar i {
+.stickyNav a,
+.stickyNav .nav-link,
+.stickyNav i {
   color: var(--navbar-text) !important;
+}
+
+/* Responsive cart button */
+.responsiveCart {
+  transition: all 0.3s ease;
+}
+
+.responsiveCart:hover {
+  transform: scale(1.05);
+}
+
+/* Custom Navbar Container Layout */
+.navbarContainer {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Brand Section - Left */
+.navBrand {
+  justify-self: start;
+}
+
+.brandLink {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #6050DC, #8B5CF6) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-decoration: none !important;
+}
+
+/* Navigation Links - Center */
+.navCenter {
+  justify-self: center;
+  flex-grow: 0 !important;
+}
+
+.navLinksWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+/* Actions Section - Right */
+.navActions {
+  justify-self: end;
+  gap: 0.5rem;
+}
+
+/* Button Styling */
+.actionBtn {
+  font-size: 0.8rem !important;
+  padding: 0.35rem 0.7rem !important;
+  border-radius: 20px !important;
+  transition: all 0.3s ease;
+}
+
+.actionBtn:hover {
+  transform: translateY(-1px);
+}
+
+.loginBtn {
+  font-size: 0.8rem !important;
+  padding: 0.35rem 0.7rem !important;
+  border-radius: 20px !important;
+}
+
+.signupBtn {
+  background: linear-gradient(135deg, #6050DC, #8B5CF6) !important;
+  border: none !important;
+  font-size: 0.8rem !important;
+  padding: 0.35rem 0.7rem !important;
+  border-radius: 20px !important;
+  transition: all 0.3s ease;
+}
+
+.signupBtn:hover {
+  background: linear-gradient(135deg, #5145C7, #7C3AED) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(96, 80, 220, 0.3);
+}
+
+.authButtons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Navigation Links Styling */
+.stickyNav .navbar-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.stickyNav .nav-link {
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.5rem 1rem !important;
+}
+
+.stickyNav .nav-link:hover {
+  transform: translateY(-1px);
+}
+
+.stickyNav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #6050DC, #8B5CF6);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.stickyNav .nav-link:hover::after {
+  width: 100%;
+}
+
+/* Mobile Responsive */
+@media (max-width: 991.98px) {
+  .navbarContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navBrand {
+    flex: 0 0 auto;
+  }
+  
+  .navCenter {
+    order: 3;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .navActions {
+    flex: 0 0 auto;
+    order: 2;
+  }
+  
+  .navLinksWrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .authButtons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .actionBtn,
+  .loginBtn,
+  .signupBtn {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.6rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .brandLink {
+    font-size: 1.25rem !important;
+  }
+  
+  .navActions {
+    gap: 0.25rem;
+  }
+  
+  .actionBtn,
+  .loginBtn,
+  .signupBtn {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
 }

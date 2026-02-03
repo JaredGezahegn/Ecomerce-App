@@ -4,26 +4,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
-from rest_framework.parsers import JSONParser, FormParser, MultiPartParser, BaseParser
+from rest_framework.parsers import BaseParser
 import json
-
-
-class JSONTextParser(BaseParser):
-    """Parser that accepts text/plain and attempts to parse JSON from it.
-
-    Use-case: some clients (curl defaults, misconfigured tools, or simple scripts)
-    send JSON but set Content-Type to "text/plain". Without this parser the
-    request is rejected with 415 Unsupported Media Type. This parser
-    gracefully attempts to parse JSON and falls back to returning raw text.
-    """
-    media_type = 'text/plain'
-
-    def parse(self, stream, media_type=None, parser_context=None):
-        raw = stream.read().decode('utf-8')
-        try:
-            return json.loads(raw)
-        except Exception:
-            return {"text": raw}
 
 from .models import Product, Cart, CartItem, Transaction
 from .serializers import (
@@ -46,9 +28,24 @@ import requests
 
 BASE_URL = "http://localhost:5173"
 
-def home(request):
-  return render(request, 'home.html')
 
+class JSONTextParser(BaseParser):
+    """Parser that accepts text/plain and attempts to parse JSON from it."""
+    media_type = 'text/plain'
+
+    def parse(self, stream, media_type=None, parser_context=None):
+        raw = stream.read().decode('utf-8')
+        try:
+            return json.loads(raw)
+        except Exception:
+            return {"text": raw}
+
+
+def home(request):
+    return render(request, 'home.html')
+
+
+# ------------------ PRODUCTS ------------------
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
@@ -66,21 +63,18 @@ def product_detail(request, slug):
         .prefetch_related("reviews"),
         slug=slug
     )
-
     similar_products = Product.objects.filter(
         category=product.category
     ).exclude(id=product.id)[:10]
 
     serializer = DetailedProductSerializer(
         product,
-        context={
-            "similar_products": similar_products,
-            "request": request
-        }
+        context={"similar_products": similar_products, "request": request}
     )
-
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# ------------------ CART ------------------
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -88,15 +82,9 @@ def add_item(request):
     cart_code = request.data.get("cart_code")
     product_id = request.data.get("product_id")
     quantity = request.data.get("quantity", 1)
-   
-   
-    print("REQUEST DATA:", request.data)
 
     if not cart_code or not product_id:
-        return Response(
-            {"error": "cart_code and product_id are required"},
-            status=400
-        )
+        return Response({"error": "cart_code and product_id are required"}, status=400)
 
     try:
         quantity = int(quantity)
@@ -107,18 +95,13 @@ def add_item(request):
 
     cart, _ = Cart.objects.get_or_create(cart_code=cart_code)
     product = get_object_or_404(Product, id=product_id)
-
     cartitem, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
     cartitem.quantity = cartitem.quantity + quantity if not created else quantity
     cartitem.save()
 
     serializer = CartItemSerializer(cartitem)
-
-    return Response(
-        {"message": "Item added to cart successfully", "cart_item": serializer.data},
-        status=201
-    )
+    return Response({"message": "Item added to cart successfully", "cart_item": serializer.data}, status=201)
 
 
 @api_view(["GET"])
@@ -128,22 +111,16 @@ def product_in_cart(request):
     product_id = request.query_params.get("product_id")
 
     if not cart_code or not product_id:
-        return Response(
-            {"error": "cart_code and product_id are required"},
-            status=400
-        )
+        return Response({"error": "cart_code and product_id are required"}, status=400)
 
     try:
         cart = Cart.objects.get(cart_code=cart_code)
     except Cart.DoesNotExist:
         return Response({"product_in_cart": False})
 
-    exists = CartItem.objects.filter(
-        cart=cart,
-        product_id=product_id
-    ).exists()
-
+    exists = CartItem.objects.filter(cart=cart, product_id=product_id).exists()
     return Response({"product_in_cart": exists})
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -152,6 +129,7 @@ def get_cart_stat(request):
     cart = get_object_or_404(Cart, cart_code=cart_code, paid=False)
     serializer = SimpleCartSerializer(cart)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -172,21 +150,21 @@ def update_quantity(request):
 
     try:
         quantity = int(quantity)
-        if quantity < 1:
-            return Response({"error": "quantity must be at least 1"}, status=400)
-    except:
-        return Response({"error": "quantity must be a number"}, status=400)
-
-    try:
         cartitem = CartItem.objects.get(id=cartitem_id)
+
+        if quantity <= 0:
+            cartitem.delete()
+            return Response({"message": "Item removed from cart successfully!"})
+
+        cartitem.quantity = quantity
+        cartitem.save()
+        serializer = CartItemSerializer(cartitem)
+        return Response({"data": serializer.data, "message": "Cart item updated successfully!"})
+
     except CartItem.DoesNotExist:
         return Response({"error": "CartItem not found"}, status=404)
-
-    cartitem.quantity = quantity
-    cartitem.save()
-
-    serializer = CartItemSerializer(cartitem)
-    return Response({"data": serializer.data, "message": "Cart item updated successfully!"})
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
 
 
 @api_view(['POST'])
@@ -205,6 +183,8 @@ def import_products(request):
     return Response(results)
 
 
+# ------------------ USER ------------------
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_username(request):
@@ -214,18 +194,11 @@ def get_username(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def user_info(request):
-    user= request.user
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """Token serializer that authenticates with `email` as USERNAME_FIELD.
-
-    We keep this class so the front-end can POST `{ "email": "..", "password": ".." }`
-    and receive an access + refresh token pair as well as basic user info.
-    """
-
     username_field = get_user_model().USERNAME_FIELD
 
     @classmethod
@@ -242,7 +215,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-    # Allow unauthenticated users to obtain tokens
     permission_classes = [AllowAny]
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -250,13 +222,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register(request):
-    """Register a new user and return JWT tokens.
-
-    This endpoint uses `RegistrationSerializer` for validation and returns
-    both access and refresh tokens on success so the front-end can immediately
-    authenticate the user. It must be public (AllowAny) because unauthenticated
-    users need to create accounts.
-    """
     serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -273,9 +238,11 @@ def register(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def me(request):
-    """Return the authenticated user's profile."""
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
+
+
+# ------------------ PAYMENTS ------------------
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -291,8 +258,6 @@ def initiate_payment(request):
         return Response({"error": "Cart not found or already paid"}, status=status.HTTP_404_NOT_FOUND)
 
     user = request.user
-
-    # Sum amounts using Decimal
     amount = sum((item.quantity * item.product.price for item in cart.items.all()), Decimal("0.00"))
     tax = Decimal("15.00")
     total_amount = amount + tax
@@ -327,21 +292,16 @@ def initiate_payment(request):
     }
 
     try:
-        resp = requests.post(
-            "https://api.flutterwave.com/v3/payments",
-            json=flutterwave_payload,
-            headers=headers,
-            timeout=10,
-        )
+        resp = requests.post("https://api.flutterwave.com/v3/payments", json=flutterwave_payload, headers=headers, timeout=10)
         resp.raise_for_status()
     except requests.exceptions.RequestException as e:
-        # Mark transaction as failed if external call failed
         transaction.status = "failed"
         transaction.save()
         return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
 
-    # Return the flutterwave response plus our transaction ref for client usage
     return Response({"tx_ref": tx_ref, "flutterwave": resp.json()}, status=resp.status_code)
+
+
 @api_view(["GET", "POST"])
 def payment_callback(request):
     status_param = request.GET.get("status") or request.data.get("status")
@@ -372,7 +332,6 @@ def payment_callback(request):
         return Response({"error": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND)
 
     data = resp_data.get("data", {})
-
     try:
         amount_received = Decimal(str(data.get("amount")))
     except Exception:
@@ -384,13 +343,10 @@ def payment_callback(request):
 
         cart = transaction.cart
         cart.paid = True
-        # Preserve associated user if available
         if not cart.user and transaction.user:
             cart.user = transaction.user
         cart.save()
 
         return Response({"message": "payment successful", "subMessage": "You have successfully made payment for your cart items."}, status=status.HTTP_200_OK)
 
-    return Response({"message": "payment verification failed", "details": data}, status=status.HTTP_400_BAD_REQUEST)    
-
-
+    return Response({"message": "payment verification failed", "details": data}, status=status.HTTP_400_BAD_REQUEST)
