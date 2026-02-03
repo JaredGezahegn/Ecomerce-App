@@ -1,28 +1,21 @@
-__pycache__/
-*.pyc
-db.sqlite3
-.env
-venv/
-node_modules/
-.DS_Store
-*.Log
-# Python cache
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Django
-db.sqlite3
-*.log
-*.pot
-*.py[cod]
-*.sqlite3
-
-# Virtual environment
-shopenv/
-env/
+# Virtual environments
 venv/
+env/
+shopenv/
 
-# Django migrations (optional if you want them tracked)
-*/migrations/*.pyc
+# Django
+*.log
+db.sqlite3
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
