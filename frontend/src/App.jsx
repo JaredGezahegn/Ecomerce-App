@@ -11,6 +11,7 @@ import Contact from './pages/Contact';
 import api from './api';
 import { LangProvider } from './context/LangContext';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ErrorBoundary from './components/ErrorBoundary';
 
 
@@ -36,24 +37,26 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <LangProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<MainLayout numCartItems={numCartItems} />}>
-                <Route index element={<Homepage />} />
-                <Route path="/products/:slug" element={<ProductPage setNumberCartItems={setNumberCartItems} />} />
-                <Route path="cart" element={<CartPage/>}/>
-                <Route path="profile" element={<Profile/>}/>
-                <Route path="about" element={<About/>}/>
-                <Route path="contact" element={<Contact/>}/>
-              </Route>
-              <Route path="*" element={<NotFoundPage />} />
+      <ThemeProvider>
+        <AuthProvider>
+          <LangProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<MainLayout numCartItems={numCartItems} />}>
+                  <Route index element={<Homepage />} />
+                  <Route path="/products/:slug" element={<ProductPage setNumberCartItems={setNumberCartItems} />} />
+                  <Route path="cart" element={<CartPage/>}/>
+                  <Route path="profile" element={<Profile/>}/>
+                  <Route path="about" element={<About/>}/>
+                  <Route path="contact" element={<Contact/>}/>
+                </Route>
+                <Route path="*" element={<NotFoundPage />} />
 
-            </Routes>
-          </Router>
-        </LangProvider>
-      </AuthProvider>
+              </Routes>
+            </Router>
+          </LangProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }
