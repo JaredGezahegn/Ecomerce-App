@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLang } from '../context/LangContext';
 import api from '../api';
 import './Profile.css';
 
 const Profile = () => {
   const { user, fetchUserInfo, logout } = useAuth();
+  const { t } = useLang();
   const [activeSection, setActiveSection] = useState('account');
   const [formData, setFormData] = useState({
     first_name: '',
@@ -878,6 +880,8 @@ const Profile = () => {
     }
   };
 
+  return (
+    <div className="profile-page">
   return (
     <div className="profile-page">
       <div className="profile-container">

@@ -59,41 +59,26 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true, data: response.data };
     } catch (error) {
-      console.error('Login error:', error.response?.data);
       return { 
         success: false, 
-        error: error.response?.data?.detail || error.response?.data?.non_field_errors?.[0] || 'Login failed' 
+        error: error.response?.data?.detail || 'Login failed' 
       };
     }
   };
 
   const signup = async (userData) => {
     try {
-      // Ensure password2 is included - if missing, use password value
-      const signupData = {
-        ...userData,
-        password2: userData.password2 || userData.password
-      };
+      // Register user
+      await api.post('auth/register/', userData);
       
-      console.log('Final signup data being sent:', signupData);
+      // Auto-login after signup
+      const loginResult = await login({
+        username: userData.username,
+        password: userData.password
+      });
       
-      // Register user - backend returns tokens directly
-      const response = await api.post('auth/register/', signupData);
-      
-      // Store tokens from registration response
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      
-      // Set authorization header
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-      
-      // Set user data from registration response
-      setUser(response.data.user);
-      setIsAuthenticated(true);
-      
-      return { success: true, data: response.data };
+      return loginResult;
     } catch (error) {
-      console.error('Signup error:', error.response?.data);
       return { 
         success: false, 
         error: error.response?.data || 'Signup failed' 

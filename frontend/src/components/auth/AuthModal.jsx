@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useState } from 'react';
 import { useLang } from '../../context/LangContext';
 import { useAuth } from '../../context/AuthContext';
 import LoginForm from './LoginForm';
 
-// Compact SignUp component with modern styling
-const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
+// Complete SignUp component with compact layout
+const SignUpForm = ({ onSuccess, onSwitchToLogin }) => {
   const { t } = useLang();
   const { signup } = useAuth();
   const [formData, setFormData] = useState({
@@ -27,6 +26,7 @@ const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear field error when user starts typing
     if (fieldErrors[e.target.name]) {
       setFieldErrors({
         ...fieldErrors,
@@ -81,8 +81,8 @@ const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
         last_name: formData.last_name,
         phone: formData.phone,
         city: formData.city,
-        state: '',
-        address: ''
+        state: '', // Optional field, can be empty
+        address: '' // Optional field, can be empty
       };
 
       const result = await signup(signupData);
@@ -104,269 +104,190 @@ const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
   };
   
   return (
-    <div className="h-100 d-flex flex-column">
-      <div className="text-center mb-2">
-        <h4 className={`mb-1 ${isDarkMode ? 'text-white' : 'text-dark'}`}>
-          {t('auth.signup')}
-        </h4>
-        <p className={`small mb-0 ${isDarkMode ? 'text-light' : 'text-muted'}`} style={{ fontSize: '0.8rem' }}>
-          Create your account to get started
-        </p>
-      </div>
-      
-      {error && (
-        <div className="alert alert-danger py-1 mb-2" role="alert" style={{ fontSize: '0.75rem' }}>
-          <small>{error}</small>
-        </div>
-      )}
+    <div className="card shadow-lg">
+      <div className="card-body p-4">
+        <h3 className="card-title text-center mb-3">{t('auth.signup')}</h3>
+        
+        {error && (
+          <div className="alert alert-danger py-2" role="alert">
+            <small>{error}</small>
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className="flex-grow-1">
-        {/* Name Fields */}
-        <div className="row mb-1">
-          <div className="col-6">
-            <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-              {t('auth.firstName')}
+        <form onSubmit={handleSubmit}>
+          {/* Name Fields */}
+          <div className="row">
+            <div className="col-6 mb-2">
+              <label htmlFor="first_name" className="form-label small">
+                {t('auth.firstName')}
+              </label>
+              <input
+                type="text"
+                className={`form-control form-control-sm ${fieldErrors.first_name ? 'is-invalid' : ''}`}
+                id="first_name"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleChange}
+              />
+              {fieldErrors.first_name && (
+                <div className="invalid-feedback small">{fieldErrors.first_name}</div>
+              )}
+            </div>
+
+            <div className="col-6 mb-2">
+              <label htmlFor="last_name" className="form-label small">
+                {t('auth.lastName')}
+              </label>
+              <input
+                type="text"
+                className={`form-control form-control-sm ${fieldErrors.last_name ? 'is-invalid' : ''}`}
+                id="last_name"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleChange}
+              />
+              {fieldErrors.last_name && (
+                <div className="invalid-feedback small">{fieldErrors.last_name}</div>
+              )}
+            </div>
+          </div>
+
+          {/* Username */}
+          <div className="mb-2">
+            <label htmlFor="username" className="form-label small">
+              {t('auth.username')} *
             </label>
             <input
               type="text"
-              className={`form-control form-control-sm ${fieldErrors.first_name ? 'is-invalid' : ''}`}
-              placeholder={t('auth.firstName')}
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              style={{
-                backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-                color: isDarkMode ? '#f5f5f5' : '#000000',
-                borderColor: isDarkMode ? '#404040' : '#ced4da',
-                fontSize: '0.8rem',
-                padding: '6px 10px'
-              }}
-            />
-            {fieldErrors.first_name && (
-              <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.first_name}</div>
-            )}
-          </div>
-          <div className="col-6">
-            <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-              {t('auth.lastName')}
-            </label>
-            <input
-              type="text"
-              className={`form-control form-control-sm ${fieldErrors.last_name ? 'is-invalid' : ''}`}
-              placeholder={t('auth.lastName')}
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              style={{
-                backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-                color: isDarkMode ? '#f5f5f5' : '#000000',
-                borderColor: isDarkMode ? '#404040' : '#ced4da',
-                fontSize: '0.8rem',
-                padding: '6px 10px'
-              }}
-            />
-            {fieldErrors.last_name && (
-              <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.last_name}</div>
-            )}
-          </div>
-        </div>
-
-        {/* Username & Email */}
-        <div className="mb-1">
-          <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-            {t('auth.username')} *
-          </label>
-          <input
-            type="text"
-            className={`form-control form-control-sm ${fieldErrors.username ? 'is-invalid' : ''}`}
-            placeholder={`${t('auth.username')} *`}
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-            style={{
-              backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-              color: isDarkMode ? '#f5f5f5' : '#000000',
-              borderColor: isDarkMode ? '#404040' : '#ced4da',
-              fontSize: '0.8rem',
-              padding: '6px 10px'
-            }}
-          />
-          {fieldErrors.username && (
-            <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.username}</div>
-          )}
-        </div>
-
-        <div className="mb-1">
-          <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-            {t('auth.email')} *
-          </label>
-          <input
-            type="email"
-            className={`form-control form-control-sm ${fieldErrors.email ? 'is-invalid' : ''}`}
-            placeholder={`${t('auth.email')} *`}
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={{
-              backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-              color: isDarkMode ? '#f5f5f5' : '#000000',
-              borderColor: isDarkMode ? '#404040' : '#ced4da',
-              fontSize: '0.8rem',
-              padding: '6px 10px'
-            }}
-          />
-          {fieldErrors.email && (
-            <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.email}</div>
-          )}
-        </div>
-
-        {/* Password Fields */}
-        <div className="row mb-1">
-          <div className="col-6">
-            <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-              {t('auth.password')} *
-            </label>
-            <input
-              type="password"
-              className={`form-control form-control-sm ${fieldErrors.password ? 'is-invalid' : ''}`}
-              placeholder={`${t('auth.password')} *`}
-              name="password"
-              value={formData.password}
+              className={`form-control form-control-sm ${fieldErrors.username ? 'is-invalid' : ''}`}
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               required
-              style={{
-                backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-                color: isDarkMode ? '#f5f5f5' : '#000000',
-                borderColor: isDarkMode ? '#404040' : '#ced4da',
-                fontSize: '0.8rem',
-                padding: '6px 10px'
-              }}
             />
-            {fieldErrors.password && (
-              <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.password}</div>
+            {fieldErrors.username && (
+              <div className="invalid-feedback small">{fieldErrors.username}</div>
             )}
           </div>
-          <div className="col-6">
-            <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-              {t('auth.confirmPassword')} *
+
+          {/* Email */}
+          <div className="mb-2">
+            <label htmlFor="email" className="form-label small">
+              {t('auth.email')} *
             </label>
             <input
-              type="password"
-              className={`form-control form-control-sm ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
-              placeholder={`${t('auth.confirmPassword')} *`}
-              name="confirmPassword"
-              value={formData.confirmPassword}
+              type="email"
+              className={`form-control form-control-sm ${fieldErrors.email ? 'is-invalid' : ''}`}
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
-              style={{
-                backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-                color: isDarkMode ? '#f5f5f5' : '#000000',
-                borderColor: isDarkMode ? '#404040' : '#ced4da',
-                fontSize: '0.8rem',
-                padding: '6px 10px'
-              }}
             />
-            {fieldErrors.confirmPassword && (
-              <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.confirmPassword}</div>
+            {fieldErrors.email && (
+              <div className="invalid-feedback small">{fieldErrors.email}</div>
             )}
           </div>
-        </div>
 
-        {/* Contact Fields */}
-        <div className="row mb-2">
-          <div className="col-6">
-            <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-              {t('auth.phone')}
-            </label>
-            <input
-              type="tel"
-              className={`form-control form-control-sm ${fieldErrors.phone ? 'is-invalid' : ''}`}
-              placeholder={t('auth.phone')}
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              style={{
-                backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-                color: isDarkMode ? '#f5f5f5' : '#000000',
-                borderColor: isDarkMode ? '#404040' : '#ced4da',
-                fontSize: '0.8rem',
-                padding: '6px 10px'
-              }}
-            />
-            {fieldErrors.phone && (
-              <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.phone}</div>
-            )}
-          </div>
-          <div className="col-6">
-            <label className={`form-label ${isDarkMode ? 'text-light' : 'text-dark'}`} style={{ fontSize: '0.75rem', marginBottom: '2px' }}>
-              {t('auth.city')}
-            </label>
-            <input
-              type="text"
-              className={`form-control form-control-sm ${fieldErrors.city ? 'is-invalid' : ''}`}
-              placeholder={t('auth.city')}
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              style={{
-                backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
-                color: isDarkMode ? '#f5f5f5' : '#000000',
-                borderColor: isDarkMode ? '#404040' : '#ced4da',
-                fontSize: '0.8rem',
-                padding: '6px 10px'
-              }}
-            />
-            {fieldErrors.city && (
-              <div className="invalid-feedback" style={{ fontSize: '0.7rem' }}>{fieldErrors.city}</div>
-            )}
-          </div>
-        </div>
+          {/* Password Fields */}
+          <div className="row">
+            <div className="col-6 mb-2">
+              <label htmlFor="password" className="form-label small">
+                {t('auth.password')} *
+              </label>
+              <input
+                type="password"
+                className={`form-control form-control-sm ${fieldErrors.password ? 'is-invalid' : ''}`}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              {fieldErrors.password && (
+                <div className="invalid-feedback small">{fieldErrors.password}</div>
+              )}
+            </div>
 
-        <div className="d-flex justify-content-center mb-2">
+            <div className="col-6 mb-2">
+              <label htmlFor="confirmPassword" className="form-label small">
+                {t('auth.confirmPassword')} *
+              </label>
+              <input
+                type="password"
+                className={`form-control form-control-sm ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+              {fieldErrors.confirmPassword && (
+                <div className="invalid-feedback small">{fieldErrors.confirmPassword}</div>
+              )}
+            </div>
+          </div>
+
+          {/* Contact Fields */}
+          <div className="row">
+            <div className="col-6 mb-2">
+              <label htmlFor="phone" className="form-label small">
+                {t('auth.phone')}
+              </label>
+              <input
+                type="tel"
+                className={`form-control form-control-sm ${fieldErrors.phone ? 'is-invalid' : ''}`}
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+              {fieldErrors.phone && (
+                <div className="invalid-feedback small">{fieldErrors.phone}</div>
+              )}
+            </div>
+
+            <div className="col-6 mb-3">
+              <label htmlFor="city" className="form-label small">
+                {t('auth.city')}
+              </label>
+              <input
+                type="text"
+                className={`form-control form-control-sm ${fieldErrors.city ? 'is-invalid' : ''}`}
+                id="city"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+              />
+              {fieldErrors.city && (
+                <div className="invalid-feedback small">{fieldErrors.city}</div>
+              )}
+            </div>
+          </div>
+
           <button
             type="submit"
-            className="btn"
+            className="btn btn-primary w-100 mb-3"
             disabled={loading}
-            style={{ 
-              background: 'linear-gradient(135deg, #6050DC, #8B5CF6)',
-              border: 'none',
-              color: 'white',
-              fontSize: '0.8rem',
-              padding: '8px 24px',
-              fontWeight: '500',
-              borderRadius: '20px',
-              minWidth: '120px',
-              boxShadow: '0 2px 8px rgba(96, 80, 220, 0.3)',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-1px)';
-              e.target.style.boxShadow = '0 4px 12px rgba(96, 80, 220, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 2px 8px rgba(96, 80, 220, 0.3)';
-            }}
+            style={{ backgroundColor: '#6050DC', borderColor: '#6050DC' }}
           >
             {loading ? t('common.loading') : t('auth.signup')}
           </button>
-        </div>
-      </form>
+        </form>
 
-      <div className="text-center">
-        <p className={`mb-0 ${isDarkMode ? 'text-light' : 'text-muted'}`} style={{ fontSize: '0.75rem' }}>
-          {t('auth.hasAccount')}{' '}
-          <button
-            type="button"
-            className="btn btn-link p-0 text-decoration-none"
-            onClick={onSwitchToLogin}
-            style={{ color: '#6050DC', fontSize: '0.75rem' }}
-          >
-            {t('auth.login')}
-          </button>
-        </p>
+        <div className="text-center">
+          <p className="mb-0 small">
+            {t('auth.hasAccount')}{' '}
+            <button
+              type="button"
+              className="btn btn-link p-0 small"
+              onClick={onSwitchToLogin}
+            >
+              {t('auth.login')}
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -376,44 +297,6 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
   const { t } = useLang();
   const [mode, setMode] = useState(initialMode);
   const [message, setMessage] = useState('');
-  
-  // Get theme from body class
-  const isDarkMode = document.body.classList.contains('dark-theme');
-
-  // Update mode when initialMode changes
-  useEffect(() => {
-    console.log('AuthModal: initialMode changed to:', initialMode);
-    setMode(initialMode);
-  }, [initialMode]);
-
-  // Reset mode when modal closes
-  useEffect(() => {
-    if (!isOpen) {
-      setMessage('');
-    }
-  }, [isOpen]);
-
-  // Debug current mode
-  useEffect(() => {
-    console.log('AuthModal: current mode is:', mode);
-  }, [mode]);
-
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add('modal-open');
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = 'unset';
-    }
-
-    // Cleanup on unmount
-    return () => {
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
 
   const handleLoginSuccess = async () => {
     setMessage(t('auth.loginSuccess'));
@@ -443,87 +326,37 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
 
   if (!isOpen) return null;
 
-  return createPortal(
-    <div 
-      className="modal fade show d-block" 
-      style={{ 
-        backgroundColor: 'rgba(0,0,0,0.6)', 
-        zIndex: 9999,
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden'
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
-    >
-      <div 
-        className="modal-dialog modal-dialog-centered modal-lg" 
-        style={{ 
-          maxWidth: '900px', 
-          margin: '0 auto',
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          overflow: 'hidden'
-        }}
-      >
-        <div 
-          className={`modal-content border-0 shadow-lg ${isDarkMode ? 'bg-dark' : 'bg-white'}`}
-          style={{
-            borderRadius: '16px',
-            overflow: 'hidden',
-            maxHeight: '90vh',
-            minHeight: '500px'
-          }}
-        >
-          {/* Header */}
-          <div className={`modal-header border-0 ${isDarkMode ? 'bg-dark' : 'bg-white'}`} style={{ padding: '1rem 1.5rem 0.5rem' }}>
+  return (
+    <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className="modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="modal-header border-0">
             <button
               type="button"
-              className="modern-close-btn"
+              className="btn-close"
               onClick={onClose}
               aria-label="Close"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path 
-                  d="M18 6L6 18M6 6L18 18" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+            ></button>
           </div>
-          
-          {/* Body */}
-          <div className="modal-body p-0" style={{ overflow: 'hidden' }}>
+          <div className="modal-body p-0">
             {message && (
-              <div className="alert alert-success mx-4 mb-3" role="alert">
+              <div className="alert alert-success mx-4 mt-3" role="alert">
                 {message}
               </div>
             )}
             
-            <div className="row g-0" style={{ minHeight: '450px' }}>
+            <div className="row g-0">
               {/* Left side - Form */}
               <div className="col-md-8 p-4">
                 {mode === 'login' ? (
                   <LoginForm
                     onSuccess={handleLoginSuccess}
                     onSwitchToSignup={switchToSignup}
-                    isDarkMode={isDarkMode}
                   />
                 ) : (
                   <SignUpForm
                     onSuccess={handleSignupSuccess}
                     onSwitchToLogin={switchToLogin}
-                    isDarkMode={isDarkMode}
                   />
                 )}
               </div>
@@ -533,8 +366,8 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
                 className="col-md-4 d-flex align-items-center justify-content-center text-white p-4"
                 style={{
                   background: 'linear-gradient(135deg, #6B46C1 0%, #8B5CF6 50%, #A78BFA 100%)',
-                  borderTopRightRadius: '16px',
-                  borderBottomRightRadius: '16px'
+                  borderTopRightRadius: '0.375rem',
+                  borderBottomRightRadius: '0.375rem'
                 }}
               >
                 <div className="text-center">
@@ -553,8 +386,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
           </div>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };
 
