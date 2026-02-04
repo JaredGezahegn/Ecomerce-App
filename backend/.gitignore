@@ -1,7 +1,21 @@
+# Python
 __pycache__/
 *.pyc
-db.sqlite3
-.env
+*.pyo
+*.pyd
+
+# Virtual environments
 venv/
-node_modules/
-FLUTTERWAVE_SECRET_KEY
+env/
+shopenv/
+
+# Django
+*.log
+db.sqlite3
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
