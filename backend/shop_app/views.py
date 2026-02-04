@@ -41,8 +41,9 @@ class JSONTextParser(BaseParser):
             return {"text": raw}
 
 
+@api_view(["GET"])
 def home(request):
-    return render(request, 'home.html')
+    return Response({"message": "Welcome to SHOPPIT API", "status": "running"})
 
 
 # ------------------ PRODUCTS ------------------
