@@ -59,22 +59,32 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React dev server
+    "http://localhost:5173",  
     "http://127.0.0.1:5173",
-    # Add your frontend domain here
+   
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
-SIMPLE_JWT = { 
+# SimpleJWT configuration: use clear and correct key names. Adjust lifetimes
+# for your security posture. Shorter access tokens and longer refresh tokens
+# are a common compromise between UX and security.
+SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH TOKEN LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
 ROOT_URLCONF = 'SHOPPIT.urls'
+
+# Ensure the project uses the custom user model defined in `core` app.
+AUTH_USER_MODEL = 'core.CustomUser'
 
 TEMPLATES = [
     {
@@ -149,5 +159,5 @@ BASE_URL= 'HTTP://127.0.0.1:8001/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_AUTO_MODEL= 'django.db.models.BigAtoField'
-AUTH_USER_MODEL='core.CustomUser'
+
+FLUTTERWAVE_SECRET_KEY = "kaKyOg7hAjEQQRMvBsgcNBbEt0zs8JOo"
