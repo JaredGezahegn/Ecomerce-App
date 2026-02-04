@@ -6,32 +6,15 @@ import styles from './NavBar.module.css';
 import NavBarLink from './NavBarLink';
 import { useLang } from '../../context/LangContext';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import AuthModal from '../auth/AuthModal';
 
 const NavBar = ({numCartItems}) => {
   const { language, toggleLanguage, t } = useLang();
   const { user, isAuthenticated, logout } = useAuth();
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
+  const { isDarkMode, toggleTheme } = useTheme();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState('login');
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add("dark-theme");
-      document.body.classList.remove("light-theme");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.add("light-theme");
-      document.body.classList.remove("dark-theme");
-      localStorage.setItem("theme", "light");
-    }
-  }, [isDarkMode]);
-
-  const toggleTheme = () => {
-    setIsDarkMode(prev => !prev);
-  };
 
   const handleLogin = () => {
     console.log('Login button clicked - setting mode to login');
@@ -54,13 +37,6 @@ const NavBar = ({numCartItems}) => {
     // Reset auth mode when closing
     setAuthMode('login');
   };
-
-  // Clear language localStorage to force Amharic default
-  useEffect(() => {
-    if (!localStorage.getItem('language')) {
-      localStorage.setItem('language', 'am');
-    }
-  }, []);
 
   return (
     <nav
@@ -99,7 +75,7 @@ const NavBar = ({numCartItems}) => {
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.actionBtn}`}
+            className={`btn ${styles.actionBtn}`}
             title={language === 'en' ? 'Switch to Amharic' : 'Switch to English'}
           >
             <FaGlobe size={16} />
@@ -109,7 +85,7 @@ const NavBar = ({numCartItems}) => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.actionBtn}`}
+            className={`btn ${styles.actionBtn}`}
             title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {isDarkMode ? <FaSun size={16} /> : <FaMoon size={16} />}
@@ -117,10 +93,10 @@ const NavBar = ({numCartItems}) => {
 
           {/* Cart Button - Only show for authenticated users */}
           {isAuthenticated && (
-            <Link to="/cart" className={`btn me-2 position-relative ${styles.responsiveCart} ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'}`}>
-              <FaShoppingCart size={16} className={isDarkMode ? 'text-light' : 'text-dark'} />
+            <Link to="/cart" className={`btn ${styles.responsiveCart}`}>
+              <FaShoppingCart size={16} />
               {numCartItems > 0 && (
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <span className="badge">
                   {numCartItems}
                 </span>
               )}
@@ -132,13 +108,13 @@ const NavBar = ({numCartItems}) => {
             <div className="d-flex align-items-center">
               <Link 
                 to="/profile" 
-                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.actionBtn}`}
+                className={`btn me-2 ${styles.userProfileBtn}`}
               >
                 <FaUser size={14} className="me-1" />
                 {user?.first_name || user?.username}
               </Link>
               <button
-                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} ${styles.actionBtn}`}
+                className={`btn ${styles.logoutBtn}`}
                 onClick={handleLogout}
               >
                 {t('auth.logout')}
@@ -147,13 +123,13 @@ const NavBar = ({numCartItems}) => {
           ) : (
             <div className={styles.authButtons}>
               <button
-                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.loginBtn}`}
+                className={`btn ${styles.loginBtn}`}
                 onClick={handleLogin}
               >
                 {t('auth.login')}
               </button>
               <button
-                className={`btn btn-primary ${styles.signupBtn}`}
+                className={`btn ${styles.signupBtn}`}
                 onClick={handleSignup}
               >
                 {t('auth.signup')}

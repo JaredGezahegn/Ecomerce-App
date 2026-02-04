@@ -283,3 +283,190 @@ body.dark-theme .modern-close-btn:hover {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
+/* Enhanced Dark Theme Support for All Pages */
+body.dark-theme {
+  background-color: #121212 !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark theme for cards and containers */
+body.dark-theme .card,
+body.dark-theme .bg-white {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border-color: #333 !important;
+}
+
+/* Dark theme for forms */
+body.dark-theme .form-control,
+body.dark-theme .form-select,
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+  background-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+  border-color: #444 !important;
+}
+
+body.dark-theme .form-control:focus,
+body.dark-theme .form-select:focus,
+body.dark-theme input:focus,
+body.dark-theme textarea:focus {
+  background-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+  border-color: #6050DC !important;
+  box-shadow: 0 0 0 0.2rem rgba(96, 80, 220, 0.25) !important;
+}
+
+/* Dark theme for buttons */
+body.dark-theme .btn-light {
+  background-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+  border-color: #444 !important;
+}
+
+body.dark-theme .btn-light:hover {
+  background-color: #3d3d3d !important;
+  color: #f5f5f5 !important;
+  border-color: #555 !important;
+}
+
+/* Dark theme for modals */
+body.dark-theme .modal-content {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border-color: #333 !important;
+}
+
+body.dark-theme .modal-header {
+  border-bottom-color: #333 !important;
+}
+
+body.dark-theme .modal-footer {
+  border-top-color: #333 !important;
+}
+
+/* Dark theme for tables */
+body.dark-theme .table {
+  color: #f5f5f5 !important;
+}
+
+body.dark-theme .table-striped > tbody > tr:nth-of-type(odd) > td,
+body.dark-theme .table-striped > tbody > tr:nth-of-type(odd) > th {
+  background-color: #2d2d2d !important;
+}
+
+/* Dark theme for alerts */
+body.dark-theme .alert {
+  background-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+  border-color: #444 !important;
+}
+
+/* Dark theme for list groups */
+body.dark-theme .list-group-item {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border-color: #333 !important;
+}
+
+/* Dark theme for dropdowns */
+body.dark-theme .dropdown-menu {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+}
+
+body.dark-theme .dropdown-item {
+  color: #f5f5f5 !important;
+}
+
+body.dark-theme .dropdown-item:hover,
+body.dark-theme .dropdown-item:focus {
+  background-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark theme for borders and dividers */
+body.dark-theme hr {
+  border-color: #333 !important;
+}
+
+body.dark-theme .border {
+  border-color: #333 !important;
+}
+
+/* Dark theme for text colors */
+body.dark-theme .text-muted {
+  color: #aaa !important;
+}
+
+body.dark-theme .text-dark {
+  color: #f5f5f5 !important;
+}
+
+/* Dark theme for profile page specific elements */
+body.dark-theme .profile-page {
+  background-color: #121212 !important;
+  color: #f5f5f5 !important;
+}
+
+body.dark-theme .profile-container {
+  background-color: #121212 !important;
+}
+
+body.dark-theme .profile-sidebar {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+}
+
+body.dark-theme .profile-content {
+  background-color: #121212 !important;
+}
+
+body.dark-theme .content-section {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark theme for about and contact pages */
+body.dark-theme .about-page,
+body.dark-theme .contact-page {
+  background-color: #121212 !important;
+  color: #f5f5f5 !important;
+}
+
+body.dark-theme .about-section,
+body.dark-theme .contact-section {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark theme for home page */
+body.dark-theme .home-page {
+  background-color: #121212 !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark theme for product cards */
+body.dark-theme .product-card {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border-color: #333 !important;
+}
+
+/* Dark theme for cart page */
+body.dark-theme .cart-page {
+  background-color: #121212 !important;
+  color: #f5f5f5 !important;
+}
+
+body.dark-theme .cart-item {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border-color: #333 !important;
+}
+
+/* Ensure smooth transitions */
+body.dark-theme * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}

@@ -1,225 +1,543 @@
-/* Light Theme — default */
-body.light-theme {
-  --bg-color: #ffffff;
-  --text-color: #000000;
-  --navbar-bg: #ffffff;
-  --navbar-text: #000000;
+/* CSS Variables for consistent theming */
+:root {
+  /* Colors */
+  --primary-color: #6050DC;
+  --primary-hover: #5145C7;
+  --secondary-color: #8B5CF6;
+  --accent-color: #EC4899;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+  --bg-white: #ffffff;
+  --bg-light: #f9fafb;
+  --border-light: #e5e7eb;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Typography */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-base: 0.3s ease-in-out;
+  --transition-slow: 0.5s ease-in-out;
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
 }
 
-/* Dark Theme */
+/* Dark theme variables */
 body.dark-theme {
-  --bg-color: #181818;
-  --text-color: #ffffff;
-  --navbar-bg: #202020;
-  --navbar-text: #ffffff;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-light: #9ca3af;
+  --bg-white: #1f2937;
+  --bg-light: #111827;
+  --border-light: #374151;
 }
 
-/* Global Body Transition */
+/* Global body styling */
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
-/* Sticky Navbar */
+/* Main Navbar Styling */
 .stickyNav {
   position: sticky !important;
   top: 0;
   z-index: 1030;
-  background-color: var(--navbar-bg) !important;
-  color: var(--navbar-text) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-color: var(--bg-white) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
 }
 
-/* Ensure Navbar Links Follow Theme */
-.stickyNav a,
-.stickyNav .nav-link,
-.stickyNav i {
-  color: var(--navbar-text) !important;
+.stickyNav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-white);
+  opacity: 0.95;
+  z-index: -1;
 }
 
-/* Responsive cart button */
-.responsiveCart {
-  transition: all 0.3s ease;
-}
-
-.responsiveCart:hover {
-  transform: scale(1.05);
-}
-
-/* Custom Navbar Container Layout */
+/* Navbar Container Layout */
 .navbarContainer {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  display: flex;
   align-items: center;
-  gap: 1rem;
-  width: 100%;
+  justify-content: space-between;
+  padding: var(--spacing-md) 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
 }
 
 /* Brand Section - Left */
 .navBrand {
-  justify-self: start;
+  flex: 0 0 auto;
+  z-index: 10;
 }
 
 .brandLink {
-  font-size: 1.5rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 1px;
-  background: linear-gradient(135deg, #6050DC, #8B5CF6) !important;
+  font-size: var(--font-size-2xl) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color)) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
   text-decoration: none !important;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.brandLink:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
 }
 
 /* Navigation Links - Center */
 .navCenter {
-  justify-self: center;
-  flex-grow: 0 !important;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
 }
 
 .navLinksWrapper {
   display: flex;
-  justify-content: center;
-}
-
-/* Actions Section - Right */
-.navActions {
-  justify-self: end;
-  gap: 0.5rem;
-}
-
-/* Button Styling */
-.actionBtn {
-  font-size: 0.8rem !important;
-  padding: 0.35rem 0.7rem !important;
-  border-radius: 20px !important;
-  transition: all 0.3s ease;
-}
-
-.actionBtn:hover {
-  transform: translateY(-1px);
-}
-
-.loginBtn {
-  font-size: 0.8rem !important;
-  padding: 0.35rem 0.7rem !important;
-  border-radius: 20px !important;
-}
-
-.signupBtn {
-  background: linear-gradient(135deg, #6050DC, #8B5CF6) !important;
-  border: none !important;
-  font-size: 0.8rem !important;
-  padding: 0.35rem 0.7rem !important;
-  border-radius: 20px !important;
-  transition: all 0.3s ease;
-}
-
-.signupBtn:hover {
-  background: linear-gradient(135deg, #5145C7, #7C3AED) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(96, 80, 220, 0.3);
-}
-
-.authButtons {
-  display: flex;
-  gap: 0.5rem;
   align-items: center;
 }
 
-/* Navigation Links Styling */
+/* Direct targeting with maximum specificity */
+.stickyNav .navLinksWrapper .navbar-nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important; /* Much tighter spacing */
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  flex-direction: row !important;
+}
+
+/* Remove Bootstrap's default spacing on nav items */
+.stickyNav .navLinksWrapper .nav-item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Fallback rule */
 .stickyNav .navbar-nav {
   display: flex;
-  justify-content: center;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
+/* Compact nav-link styling */
+.navLinksWrapper .nav-link,
 .stickyNav .nav-link {
+  color: var(--text-primary) !important;
   font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: var(--font-size-base);
+  text-decoration: none;
+  padding: 0.5rem 0.75rem !important; /* Reduced horizontal padding */
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
   position: relative;
-  padding: 0.5rem 1rem !important;
+  white-space: nowrap;
+  display: block;
 }
 
+.navLinksWrapper .nav-link:hover,
 .stickyNav .nav-link:hover {
+  color: var(--primary-color) !important;
+  background-color: rgba(96, 80, 220, 0.08);
   transform: translateY(-1px);
 }
 
 .stickyNav .nav-link::after {
   content: '';
   position: absolute;
-  bottom: -5px;
+  bottom: -2px;
   left: 50%;
   width: 0;
   height: 2px;
-  background: linear-gradient(135deg, #6050DC, #8B5CF6);
-  transition: all 0.3s ease;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
   transform: translateX(-50%);
 }
 
 .stickyNav .nav-link:hover::after {
-  width: 100%;
+  width: 80%;
 }
 
-/* Mobile Responsive */
+/* Actions Section - Right */
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 0 0 auto;
+  z-index: 10;
+}
+
+/* Base Button Styling */
+.actionBtn,
+.loginBtn,
+.signupBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  min-height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Action Buttons (Language, Theme) */
+.actionBtn {
+  background: transparent;
+  border-color: var(--border-light);
+  color: var(--text-secondary) !important;
+  min-width: 50px; /* Smaller fixed width to fit both buttons */
+  justify-content: center;
+}
+
+.actionBtn:hover {
+  background: var(--bg-light);
+  border-color: var(--primary-color);
+  color: var(--primary-color) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.actionBtn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.actionBtn small {
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+/* Login Button - Secondary */
+.loginBtn {
+  background: transparent;
+  border-color: var(--text-secondary);
+  color: var(--text-secondary) !important;
+}
+
+.loginBtn:hover {
+  background: var(--text-primary);
+  color: var(--bg-white) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Sign Up Button - Primary CTA */
+.signupBtn {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.signupBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left var(--transition-slow);
+}
+
+.signupBtn:hover::before {
+  left: 100%;
+}
+
+.signupBtn:hover {
+  background: linear-gradient(135deg, var(--primary-hover), #7C3AED) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Authentication Buttons Container */
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Cart Button Styling */
+.responsiveCart {
+  position: relative;
+  background: transparent;
+  border-color: var(--border-light);
+  color: var(--text-secondary) !important;
+}
+
+.responsiveCart:hover {
+  background: rgba(96, 80, 220, 0.05);
+  border-color: var(--primary-color);
+  color: var(--primary-color) !important;
+  transform: translateY(-1px) scale(1.05);
+}
+
+.responsiveCart .badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* User Profile Button */
+.userProfileBtn {
+  background: linear-gradient(135deg, rgba(96, 80, 220, 0.1), rgba(139, 92, 246, 0.1));
+  border-color: var(--primary-color);
+  color: var(--primary-color) !important;
+  font-weight: 500;
+}
+
+.userProfileBtn:hover {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white !important;
+  transform: translateY(-1px);
+}
+
+/* Logout Button */
+.logoutBtn {
+  background: transparent;
+  border-color: #ef4444;
+  color: #ef4444 !important;
+}
+
+.logoutBtn:hover {
+  background: #ef4444;
+  color: white !important;
+  transform: translateY(-1px);
+}
+
+/* Mobile Toggle Button */
+.navbar-toggler {
+  border: none !important;
+  padding: var(--spacing-xs) !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-base);
+}
+
+.navbar-toggler:hover {
+  background: var(--bg-light);
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+/* Mobile Responsive Design */
 @media (max-width: 991.98px) {
   .navbarContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .navBrand {
-    flex: 0 0 auto;
+    flex-wrap: wrap;
+    padding: var(--spacing-sm) 0;
   }
   
   .navCenter {
+    position: static;
+    transform: none;
     order: 3;
     width: 100%;
-    margin-top: 1rem;
-  }
-  
-  .navActions {
-    flex: 0 0 auto;
-    order: 2;
+    margin-top: var(--spacing-md);
+    background: var(--bg-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
   }
   
   .navLinksWrapper {
     flex-direction: column;
-    gap: 0.5rem;
-    align-items: center;
+    gap: var(--spacing-xs); /* Reduced gap for mobile */
+    width: 100%;
+  }
+  
+  .stickyNav .navbar-nav {
+    flex-direction: column;
+    gap: var(--spacing-xs); /* Reduced gap for mobile */
+    width: 100%;
+  }
+  
+  .stickyNav .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: var(--spacing-md) !important;
+    border-radius: var(--radius-md);
+  }
+  
+  .navActions {
+    gap: var(--spacing-xs);
   }
   
   .authButtons {
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    gap: var(--spacing-xs);
   }
   
   .actionBtn,
   .loginBtn,
   .signupBtn {
-    font-size: 0.75rem !important;
-    padding: 0.3rem 0.6rem !important;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    min-height: 36px;
+    min-width: 40px; /* Even smaller for mobile to fit both buttons */
+  }
+  
+  .brandLink {
+    font-size: var(--font-size-xl) !important;
   }
 }
 
 @media (max-width: 768px) {
+  .navbarContainer {
+    padding: var(--spacing-xs) 0;
+  }
+  
   .brandLink {
-    font-size: 1.25rem !important;
+    font-size: var(--font-size-lg) !important;
   }
   
   .navActions {
-    gap: 0.25rem;
+    gap: 2px;
   }
   
   .actionBtn,
   .loginBtn,
   .signupBtn {
-    font-size: 0.7rem !important;
-    padding: 0.25rem 0.5rem !important;
+    padding: 6px 8px;
+    font-size: 0.7rem;
+    min-height: 32px;
+  }
+  
+  .authButtons {
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+@media (max-width: 576px) {
+  .navActions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  
+  .authButtons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .actionBtn,
+  .loginBtn,
+  .signupBtn {
+    flex: 0 0 auto;
+    min-width: 60px;
+  }
+}
+
+/* Focus and Accessibility */
+.actionBtn:focus,
+.loginBtn:focus,
+.signupBtn:focus,
+.responsiveCart:focus,
+.stickyNav .nav-link:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent layout shift */
+.navActions {
+  min-width: 200px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 991.98px) {
+  .navActions {
+    min-width: auto;
+  }
+}
+
+/* Loading states */
+.actionBtn:disabled,
+.loginBtn:disabled,
+.signupBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .stickyNav {
+    border-bottom-width: 2px;
+  }
+  
+  .actionBtn,
+  .loginBtn {
+    border-width: 2px;
   }
 }
