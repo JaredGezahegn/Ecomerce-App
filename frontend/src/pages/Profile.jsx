@@ -882,8 +882,6 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-  return (
-    <div className="profile-page">
       <div className="profile-container">
         {renderSidebar()}
         <main className="profile-content">
