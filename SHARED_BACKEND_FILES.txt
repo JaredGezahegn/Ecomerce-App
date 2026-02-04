@@ -1,0 +1,36 @@
+# Core Django Files (Must be identical in both branches)
+backend/manage.py
+backend/SHOPPIT/__init__.py
+backend/SHOPPIT/settings.py
+backend/SHOPPIT/urls.py
+backend/SHOPPIT/wsgi.py
+backend/SHOPPIT/asgi.py
+
+# Core App Files
+backend/core/__init__.py
+backend/core/admin.py
+backend/core/apps.py
+backend/core/models.py
+backend/core/tests.py
+backend/core/views.py
+
+# Shop App Files
+backend/shop_app/__init__.py
+backend/shop_app/admin.py
+backend/shop_app/apps.py
+backend/shop_app/models.py
+backend/shop_app/serializers.py
+backend/shop_app/urls.py
+backend/shop_app/views.py
+backend/shop_app/tests.py
+
+# Migration Files (Latest versions)
+backend/core/migrations/__init__.py
+backend/core/migrations/0001_initial.py
+backend/shop_app/migrations/__init__.py
+backend/shop_app/migrations/0001_initial.py
+backend/shop_app/migrations/0002_cart_cartitem.py
+backend/shop_app/migrations/0003_dimensions_metainfo_review_and_more.py
+
+# Configuration Files
+backend/requirements.txt
