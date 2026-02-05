@@ -79,10 +79,10 @@ const CartItem = ({item, updateQuantity, removeItem}) => {
                     {item.product.name}
                 </h5>
                 <p className="mb-1" style={{ color: '#6050DC', fontWeight: '600', fontSize: '1.1rem' }}>
-                    ${item.product.price}
+                    {item.product.price} ETB
                 </p>
                 <p className={`mb-0 small ${isDarkMode ? 'text-light' : 'text-muted'}`}>
-                    Subtotal: <span className="fw-bold" style={{ color: '#6050DC' }}>${item.total}</span>
+                    Subtotal: <span className="fw-bold" style={{ color: '#6050DC' }}>{item.total} ETB</span>
                 </p>
             </div>
 

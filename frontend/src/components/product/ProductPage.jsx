@@ -124,7 +124,7 @@ const ProductPage = ({ setNumberCartItems }) => {
                                 {product.name}
                             </h1>
                             <div className="fs-5 mb-5">
-                                <span className={`${isDarkMode ? 'text-warning' : 'text-primary'} fw-bold`}>${product.price}</span>
+                                <span className={`${isDarkMode ? 'text-warning' : 'text-primary'} fw-bold`}>{product.price} ETB</span>
                             </div>
                             <p className="lead">{product.description || t('product.description')}</p>
                             <div className="d-flex">

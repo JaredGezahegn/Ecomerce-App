@@ -36,19 +36,19 @@ const CartSummary = ({ cartTotal, tax }) => {
                     <div className="mb-3">
                         <div className="d-flex justify-content-between mb-2">
                             <span className="text-muted">{t('cart.subtotal')}:</span>
-                            <span className="fw-semibold">${subTotal}</span>
+                            <span className="fw-semibold">{subTotal} ETB</span>
                         </div>
 
                         <div className="d-flex justify-content-between mb-2">
                             <span className="text-muted">{t('cart.tax')}:</span>
-                            <span className="fw-semibold">${cartTax}</span>
+                            <span className="fw-semibold">{cartTax} ETB</span>
                         </div>
 
                         <hr className={isDarkMode ? 'border-secondary' : ''} />
 
                         <div className="d-flex justify-content-between mb-3">
                             <span className="fw-bold fs-5">{t('cart.total')}:</span>
-                            <span className="fw-bold fs-5" style={{ color: '#6050DC' }}>${total}</span>
+                            <span className="fw-bold fs-5" style={{ color: '#6050DC' }}>{total} ETB</span>
                         </div>
                     </div>
 

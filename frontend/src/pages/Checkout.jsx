@@ -109,21 +109,21 @@ const Checkout = () => {
                   {cartData.items.map(item => (
                     <div key={item.id} className="d-flex justify-content-between mb-2">
                       <span>{item.product.name} x {item.quantity}</span>
-                      <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+                      <span>{(item.product.price * item.quantity).toFixed(2)} ETB</span>
                     </div>
                   ))}
                   <hr />
                   <div className="d-flex justify-content-between mb-2">
                     <span>Subtotal:</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>{subtotal.toFixed(2)} ETB</span>
                   </div>
                   <div className="d-flex justify-content-between mb-2">
                     <span>Tax:</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>{tax.toFixed(2)} ETB</span>
                   </div>
                   <div className="d-flex justify-content-between fw-bold">
                     <span>Total:</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>{total.toFixed(2)} ETB</span>
                   </div>
                 </div>
               </div>
@@ -153,7 +153,7 @@ const Checkout = () => {
                     Processing...
                   </>
                 ) : (
-                  `Pay $${total.toFixed(2)}`
+                  `Pay ${total.toFixed(2)} ETB`
                 )}
               </button>
 

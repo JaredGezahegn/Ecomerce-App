@@ -43,7 +43,7 @@ const HomeCard = ({ product }) => {
                             {product.name}
                         </h5>
                         <h6 className={`${styles.cardPrice} ${isDarkMode ? styles.darkPrice : styles.lightPrice}`}>
-                            ${product.price}
+                            {product.price} ETB
                         </h6>
                     </div>
                 </div>
