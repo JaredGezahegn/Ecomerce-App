@@ -143,6 +143,7 @@ body {
   transition: all 0.3s ease;
   position: relative;
   padding: 0.5rem 1rem !important;
+  white-space: nowrap;
 }
 
 .stickyNav .nav-link:hover {

@@ -8,6 +8,8 @@ import CartPage from './components/cart/CartPage';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Checkout from './pages/Checkout';
+import Payments from './pages/Payments';
 import api from './api';
 import { LangProvider } from './context/LangContext';
 import { AuthProvider } from './context/AuthContext';
@@ -46,6 +48,8 @@ function App() {
                   <Route index element={<Homepage />} />
                   <Route path="/products/:slug" element={<ProductPage setNumberCartItems={setNumberCartItems} />} />
                   <Route path="cart" element={<CartPage/>}/>
+                  <Route path="checkout" element={<Checkout/>}/>
+                  <Route path="payment_status" element={<Payments/>}/>
                   <Route path="profile" element={<Profile/>}/>
                   <Route path="about" element={<About/>}/>
                   <Route path="contact" element={<Contact/>}/>

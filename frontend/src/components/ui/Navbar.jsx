@@ -115,7 +115,7 @@ const NavBar = ({numCartItems}) => {
             {isDarkMode ? <FaSun size={16} /> : <FaMoon size={16} />}
           </button>
 
-          {/* Cart Button - Only show for authenticated users */}
+          {/* Cart Button - Only for authenticated users */}
           {isAuthenticated && (
             <Link to="/cart" className={`btn me-2 position-relative ${styles.responsiveCart} ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'}`}>
               <FaShoppingCart size={16} className={isDarkMode ? 'text-light' : 'text-dark'} />
@@ -129,16 +129,16 @@ const NavBar = ({numCartItems}) => {
 
           {/* Authentication Section */}
           {isAuthenticated ? (
-            <div className="d-flex align-items-center">
-              <Link 
-                to="/profile" 
-                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.actionBtn}`}
+            <div className={styles.authButtons}>
+              <button
+                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} me-2 ${styles.loginBtn}`}
+                onClick={() => window.location.href = '/profile'}
               >
                 <FaUser size={14} className="me-1" />
-                {user?.first_name || user?.username}
-              </Link>
+                {t('auth.profile')}
+              </button>
               <button
-                className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} ${styles.actionBtn}`}
+                className={`btn btn-primary ${styles.signupBtn}`}
                 onClick={handleLogout}
               >
                 {t('auth.logout')}

@@ -1,17 +1,35 @@
 import CartItem from "./CartItem"
 import CartSummary from "./CartSummary"
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import api from "../../api"
 import { useLang } from "../../context/LangContext"
+import { FaShoppingCart, FaArrowLeft } from "react-icons/fa"
 
 const CartPage = () => {
     const { t } = useLang();
     const cart_code = localStorage.getItem("cart_code")
     const [cartitems, setCartItems] = useState([])
     const [cartTotal, setCartTotal] = useState(0.00)
+    const [loading, setLoading] = useState(true)
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        return localStorage.getItem("theme") === "dark";
+    });
     const tax = 4.00
 
+    useEffect(() => {
+        const handleThemeChange = () => {
+            setIsDarkMode(document.body.classList.contains('dark-theme'));
+        };
+
+        const observer = new MutationObserver(handleThemeChange);
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+        return () => observer.disconnect();
+    }, []);
+
     const fetchCart = () => {
+        setLoading(true)
         api.get(`get_cart?cart_code=${cart_code}`)
             .then(res => {
                 console.log(res.data)
@@ -20,6 +38,9 @@ const CartPage = () => {
             })
             .catch(err => {
                 console.log(err.message)
+            })
+            .finally(() => {
+                setLoading(false)
             })
     }
 
@@ -45,32 +66,78 @@ const CartPage = () => {
         fetchCart()
     }, [])
 
-    if (cartitems.length < 1) {
+    if (loading) {
         return (
             <div className="container my-5">
-                <div className="alert alert-primary text-center" role="alert">
-                    <h4>{t('cart.empty')}</h4>
-                    <p>{t('cart.emptyDesc')}</p>
+                <div className="text-center py-5">
+                    <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <p className={`mt-3 ${isDarkMode ? 'text-light' : 'text-dark'}`}>Loading your cart...</p>
                 </div>
             </div>
         )
     }
+
+    if (cartitems.length < 1) {
+        return (
+            <div className="container my-5">
+                <div className="row justify-content-center">
+                    <div className="col-md-6">
+                        <div className={`card shadow-sm border-0 ${isDarkMode ? 'bg-dark text-light' : ''}`}>
+                            <div className="card-body text-center p-5">
+                                <FaShoppingCart size={80} className="text-muted mb-4" />
+                                <h3 className="mb-3">{t('cart.empty')}</h3>
+                                <p className="text-muted mb-4">{t('cart.emptyDesc')}</p>
+                                <Link to="/" className="btn btn-primary" style={{ backgroundColor: '#6050DC', borderColor: '#6050DC' }}>
+                                    <FaArrowLeft className="me-2" />
+                                    Continue Shopping
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     return (
-        <div className="container my-3 py-3" style={{ height: "80vh", overflow: "scroll" }}>
-            <h5 className="mb-4">{t('cart.title')}</h5>
-            <div className="row">
-                <div className="col-md-8">
-                    {cartitems.map(item => 
-                        <CartItem 
-                            key={item.id} 
-                            item={item} 
-                            updateQuantity={updateQuantity}
-                            removeItem={removeItem}
-                        />
-                    )}
+        <div className="container my-5">
+            {/* Header */}
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 className={`mb-1 ${isDarkMode ? 'text-light' : 'text-dark'}`}>
+                        <FaShoppingCart className="me-2" />
+                        {t('cart.title')}
+                    </h2>
+                    <p className="text-muted mb-0">{cartitems.length} {cartitems.length === 1 ? 'item' : 'items'} in your cart</p>
+                </div>
+                <Link to="/" className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'}`}>
+                    <FaArrowLeft className="me-2" />
+                    Continue Shopping
+                </Link>
+            </div>
+
+            {/* Cart Content */}
+            <div className="row g-4">
+                <div className="col-lg-8">
+                    <div className={`card shadow-sm border-0 ${isDarkMode ? 'bg-dark' : ''}`}>
+                        <div className="card-body p-4">
+                            {cartitems.map(item => 
+                                <CartItem 
+                                    key={item.id} 
+                                    item={item} 
+                                    updateQuantity={updateQuantity}
+                                    removeItem={removeItem}
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
 
-                <CartSummary cartTotal={cartTotal} tax={tax} />
+                <div className="col-lg-4">
+                    <CartSummary cartTotal={cartTotal} tax={tax} />
+                </div>
             </div>
         </div>
     )

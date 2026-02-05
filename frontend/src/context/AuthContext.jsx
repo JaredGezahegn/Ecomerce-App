@@ -45,7 +45,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await api.post('token/', credentials);
+      // Backend uses email as USERNAME_FIELD, so we need to send email
+      const loginData = {
+        email: credentials.email || credentials.username,  // Support both email and username
+        password: credentials.password
+      };
+      
+      const response = await api.post('token/', loginData);
       
       // Store tokens
       localStorage.setItem('access_token', response.data.access);
@@ -68,12 +74,18 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (userData) => {
     try {
-      // Register user
-      await api.post('auth/register/', userData);
+      // Prepare registration data with password2 field required by backend
+      const registrationData = {
+        ...userData,
+        password2: userData.password  // Backend expects password2 for confirmation
+      };
       
-      // Auto-login after signup
+      // Register user
+      await api.post('auth/register/', registrationData);
+      
+      // Auto-login after signup using email (backend uses email as USERNAME_FIELD)
       const loginResult = await login({
-        username: userData.username,
+        email: userData.email,
         password: userData.password
       });
       
