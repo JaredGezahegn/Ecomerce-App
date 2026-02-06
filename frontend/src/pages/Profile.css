@@ -584,3 +584,355 @@ body.dark-theme .form-group textarea:disabled {
     justify-content: center;
   }
 }
+
+/* Addresses Section */
+.addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.address-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.address-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(96, 80, 220, 0.1);
+}
+
+.address-card.add-new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  cursor: pointer;
+  border: 2px dashed var(--border-color);
+}
+
+.address-card.add-new:hover {
+  border-color: #6050DC;
+  background: rgba(96, 80, 220, 0.05);
+}
+
+.address-card.add-new i {
+  font-size: 3rem;
+  color: #6050DC;
+  margin-bottom: 1rem;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.address-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.default-badge {
+  background: #6050DC;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.address-body {
+  margin-bottom: 1rem;
+}
+
+.address-body p {
+  margin: 0.5rem 0;
+  color: var(--text-secondary);
+}
+
+.address-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #6050DC;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-link:hover {
+  opacity: 0.7;
+}
+
+.btn-link.text-danger {
+  color: #dc3545;
+}
+
+/* Security Section */
+.security-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.security-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.security-card:hover {
+  box-shadow: 0 4px 12px rgba(96, 80, 220, 0.1);
+}
+
+.security-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6050DC, #8B5CF6);
+  border-radius: 12px;
+  color: white;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.security-info {
+  flex: 1;
+}
+
+.security-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.security-info p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Settings Section */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.setting-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.setting-info p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #6050DC;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+.form-select {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  min-width: 150px;
+}
+
+.setting-item.danger-zone {
+  border-color: #dc3545;
+  background: rgba(220, 53, 69, 0.05);
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--bg-color);
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(96, 80, 220, 0.1);
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 1.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(96, 80, 220, 0.1);
+  color: #6050DC;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(96, 80, 220, 0.1);
+}
+
+/* Status badges for security */
+.status-enabled {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.status-disabled {
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+}
+
+.text-muted {
+  color: var(--text-color);
+  opacity: 0.6;
+  font-size: 0.85rem;
+}
+
+/* Dark theme modal support */
+body.dark-theme .modal-content {
+  background: #2a2a2a;
+}
+
+body.dark-theme .modal-header,
+body.dark-theme .modal-footer {
+  border-color: rgba(96, 80, 220, 0.2);
+}
