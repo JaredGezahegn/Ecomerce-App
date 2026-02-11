@@ -4,14 +4,17 @@ import ProductPagePlaceHolder from './ProductPagePlaceHolder';
 import { useParams } from "react-router-dom";
 import api from "../../api"
 import { useLang } from '../../context/LangContext';
+import { useAuth } from '../../context/AuthContext';
 
 const ProductPage = ({ setNumberCartItems }) => {
     const { t } = useLang();
     const { slug } = useParams();
+    const { isAuthenticated, user } = useAuth();
     const [product, setProduct] = useState({});
     const [similarProducts, setSimilarProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [inCart, setInCart] = useState(false)
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(() => {
         return localStorage.getItem("theme") === "dark";
     });
@@ -56,6 +59,14 @@ const ProductPage = ({ setNumberCartItems }) => {
     const newItem = { cart_code: cart_code, product_id: product.id }
 
     function add_item() {
+        // Check if user is authenticated
+        if (!isAuthenticated) {
+            // Show login prompt message
+            setShowLoginPrompt(true);
+            setTimeout(() => setShowLoginPrompt(false), 4000);
+            return;
+        }
+
         const newItem = {
             cart_code: cart_code,
             product_id: product.id
@@ -127,6 +138,21 @@ const ProductPage = ({ setNumberCartItems }) => {
                                 <span className={`${isDarkMode ? 'text-warning' : 'text-primary'} fw-bold`}>{product.price} ETB</span>
                             </div>
                             <p className="lead">{product.description || t('product.description')}</p>
+                            
+                            {/* Login Prompt Alert */}
+                            {showLoginPrompt && (
+                                <div className="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                    Please log in or sign up to add items to your cart
+                                    <button 
+                                        type="button" 
+                                        className="btn-close" 
+                                        onClick={() => setShowLoginPrompt(false)}
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                            )}
+                            
                             <div className="d-flex">
                                 <button className={`btn ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'} flex-shrink-0`} 
                                     type="button"

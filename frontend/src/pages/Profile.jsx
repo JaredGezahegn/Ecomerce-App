@@ -105,7 +105,7 @@ const Profile = () => {
     setMessage('');
 
     try {
-      await api.patch('user_info/', formData);
+      await api.patch('update_user_info/', formData);
       await fetchUserInfo();
       setIsEditing(false);
       setMessage('Profile updated successfully!');
