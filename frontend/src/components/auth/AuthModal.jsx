@@ -454,13 +454,16 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
         overflow: 'auto',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px'
+        display: 'flex !important',
+        alignItems: 'center !important',
+        justifyContent: 'center !important',
+        padding: '20px',
+        margin: 0
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -472,19 +475,19 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
         style={{ 
           maxWidth: '900px',
           width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
+          margin: 'auto',
+          display: 'block'
         }}
       >
         <div 
-          className={`modal-content border-0 shadow-lg ${isDarkMode ? 'bg-dark' : 'bg-white'}`}
+          className={`border-0 shadow-lg ${isDarkMode ? 'bg-dark' : 'bg-white'}`}
           style={{
             borderRadius: '16px',
             overflow: 'hidden',
             maxHeight: '90vh',
             position: 'relative',
-            width: '100%'
+            width: '100%',
+            margin: '0 auto'
           }}
         >
           {/* Close Button */}
