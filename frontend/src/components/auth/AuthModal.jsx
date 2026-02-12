@@ -447,14 +447,20 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
     <div 
       className="modal fade show d-block" 
       style={{ 
-        backgroundColor: 'rgba(0,0,0,0.6)', 
+        backgroundColor: 'rgba(0,0,0,0.7)', 
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         zIndex: 9999,
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
-        overflow: 'hidden'
+        overflow: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -463,14 +469,12 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
       }}
     >
       <div 
-        className="modal-dialog modal-dialog-centered modal-lg" 
         style={{ 
-          maxWidth: '900px', 
-          margin: '0 auto',
-          height: '100vh',
+          maxWidth: '900px',
+          width: '100%',
           display: 'flex',
-          alignItems: 'center',
-          overflow: 'hidden'
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
         <div 
@@ -479,28 +483,49 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
             borderRadius: '16px',
             overflow: 'hidden',
             maxHeight: '90vh',
-            minHeight: '500px'
+            position: 'relative',
+            width: '100%'
           }}
         >
-          {/* Header */}
-          <div className={`modal-header border-0 ${isDarkMode ? 'bg-dark' : 'bg-white'}`} style={{ padding: '1rem 1.5rem 0.5rem' }}>
-            <button
-              type="button"
-              className="modern-close-btn"
-              onClick={onClose}
-              aria-label="Close"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path 
-                  d="M18 6L6 18M6 6L18 18" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
+          {/* Close Button */}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            style={{
+              position: 'absolute',
+              right: '1rem',
+              top: '1rem',
+              zIndex: 10,
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              border: 'none',
+              backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+              color: isDarkMode ? '#fff' : '#000',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '20px',
+              fontWeight: 'bold',
+              transition: 'all 0.2s ease',
+              padding: 0
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)';
+              e.target.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+              e.target.style.transform = 'scale(1)';
+            }}
+          >
+            ×
+          </button>
+          
+          {/* Header - removed since we have the close button */}
+          <div style={{ padding: '0.5rem' }}></div>
           
           {/* Body */}
           <div className="modal-body p-0" style={{ overflow: 'hidden' }}>
