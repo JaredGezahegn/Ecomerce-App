@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: shoppit-backend
+    env: python
+    region: oregon
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn SHOPPIT.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: FLUTTERWAVE_SECRET_KEY
+        sync: false
