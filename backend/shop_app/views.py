@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 from rest_framework.parsers import BaseParser
+from django.db import models
 import json
 
 from .models import Product, Cart, CartItem, Transaction
@@ -52,6 +53,40 @@ def home(request):
 @permission_classes([AllowAny])
 def products(request):
     products = Product.objects.all()
+    
+    # Search by name or description
+    search = request.query_params.get('search', None)
+    if search:
+        products = products.filter(
+            models.Q(name__icontains=search) | 
+            models.Q(description__icontains=search) |
+            models.Q(brand__icontains=search)
+        )
+    
+    # Filter by category
+    category = request.query_params.get('category', None)
+    if category and category != 'all':
+        products = products.filter(category=category)
+    
+    # Filter by price range
+    min_price = request.query_params.get('min_price', None)
+    max_price = request.query_params.get('max_price', None)
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+    
+    # Sort
+    sort_by = request.query_params.get('sort', None)
+    if sort_by == 'price_asc':
+        products = products.order_by('price')
+    elif sort_by == 'price_desc':
+        products = products.order_by('-price')
+    elif sort_by == 'name':
+        products = products.order_by('name')
+    elif sort_by == 'rating':
+        products = products.order_by('-rating')
+    
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 

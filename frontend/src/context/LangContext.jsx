@@ -93,6 +93,23 @@ export const LangProvider = ({ children }) => {
         'common.delete': 'Delete',
         'common.view': 'View',
         
+        // Search and Filter
+        'search.placeholder': 'Search products...',
+        'search.filters': 'Filters',
+        'search.category': 'Category',
+        'search.allCategories': 'All Categories',
+        'search.electronics': 'Electronics',
+        'search.groceries': 'Groceries',
+        'search.clothing': 'Clothing',
+        'search.beauty': 'Beauty',
+        'search.sortBy': 'Sort By',
+        'search.default': 'Default',
+        'search.priceLowHigh': 'Price: Low to High',
+        'search.priceHighLow': 'Price: High to Low',
+        'search.nameAZ': 'Name: A-Z',
+        'search.rating': 'Rating',
+        'search.reset': 'Reset',
+        
         // Authentication
         'auth.login': 'Login',
         'auth.signup': 'Sign Up',
@@ -256,6 +273,23 @@ export const LangProvider = ({ children }) => {
         'common.edit': 'ያርትዑ',
         'common.delete': 'ይሰርዙ',
         'common.view': 'ይመልከቱ',
+        
+        // Search and Filter
+        'search.placeholder': 'ምርቶችን ይፈልጉ...',
+        'search.filters': 'ማጣሪያዎች',
+        'search.category': 'ምድብ',
+        'search.allCategories': 'ሁሉም ምድቦች',
+        'search.electronics': 'ኤሌክትሮኒክስ',
+        'search.groceries': 'ግሮሰሪዎች',
+        'search.clothing': 'ልብስ',
+        'search.beauty': 'ውበት',
+        'search.sortBy': 'ደርድር በ',
+        'search.default': 'ነባሪ',
+        'search.priceLowHigh': 'ዋጋ: ዝቅተኛ ወደ ከፍተኛ',
+        'search.priceHighLow': 'ዋጋ: ከፍተኛ ወደ ዝቅተኛ',
+        'search.nameAZ': 'ስም: ሀ-ፐ',
+        'search.rating': 'ደረጃ',
+        'search.reset': 'ዳግም አስጀምር',
         
         // Authentication
         'auth.login': 'ግባ',
