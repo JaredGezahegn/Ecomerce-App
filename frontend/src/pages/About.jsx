@@ -1,5 +1,5 @@
 import { useLang } from '../context/LangContext';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './About.css';
 import yaredPhoto from '../assets/yared-gezahegn.png';
 import yosefPhoto from '../assets/yosef-abire.jpg';
@@ -17,7 +17,13 @@ import {
 
 const About = () => {
   const { t } = useLang();
+  const [customers, setCustomers] = useState(0);
+  const [products, setProducts] = useState(0);
+  const [years, setYears] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const statsRef = useRef(null);
 
+  // Slideshow effect
   useEffect(() => {
     const slides = document.querySelectorAll('.slide');
     let currentSlide = 0;
@@ -28,10 +34,62 @@ const About = () => {
       slides[currentSlide].classList.add('active');
     };
 
-    const slideInterval = setInterval(nextSlide, 4000); // Change slide every 4 seconds
-
+    const slideInterval = setInterval(nextSlide, 4000);
     return () => clearInterval(slideInterval);
   }, []);
+
+  // Counter animation effect with modern spring animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            animateCounter(setCustomers, 10000, 2500);
+            animateCounter(setProducts, 500, 2500);
+            animateCounter(setYears, 5, 2500);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => {
+      if (statsRef.current) {
+        observer.unobserve(statsRef.current);
+      }
+    };
+  }, [hasAnimated]);
+
+  const animateCounter = (setter, target, duration) => {
+    const startTime = Date.now();
+    const step = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Modern easing with bounce effect (easeOutExpo + slight overshoot)
+      let eased;
+      if (progress === 1) {
+        eased = 1;
+      } else {
+        eased = 1 - Math.pow(2, -10 * progress);
+      }
+      
+      const current = Math.floor(eased * target);
+      setter(current);
+      
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        setter(target);
+      }
+    };
+    requestAnimationFrame(step);
+  };
 
   return (
     <div className="about-page">
@@ -89,17 +147,17 @@ const About = () => {
             <div className="col-lg-6">
               <h1 className="about-title">{t('about.title')}</h1>
               <p className="about-subtitle">{t('about.subtitle')}</p>
-              <div className="about-stats">
+              <div className="about-stats" ref={statsRef}>
                 <div className="stat-item">
-                  <h3>10K+</h3>
+                  <h3>{customers >= 1000 ? `${(customers / 1000).toFixed(0)}K+` : `${customers}+`}</h3>
                   <p>{t('about.customers')}</p>
                 </div>
                 <div className="stat-item">
-                  <h3>500+</h3>
+                  <h3>{products}+</h3>
                   <p>{t('about.products')}</p>
                 </div>
                 <div className="stat-item">
-                  <h3>5+</h3>
+                  <h3>{years}+</h3>
                   <p>{t('about.years')}</p>
                 </div>
               </div>

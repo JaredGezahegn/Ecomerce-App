@@ -138,9 +138,8 @@ export const LangProvider = ({ children }) => {
         // About Page
         'about.title': 'About Us',
         'about.subtitle': 'Your trusted partner for quality products and exceptional service',
-        'about.customers': 'Happy Customers',
-        'about.products': 'Products',
-        'about.years': 'Years Experience',
+        'about.subtitle2': 'At SHOPPIT, we believe shopping should be more than just a transaction. It\'s about discovering products that enhance your lifestyle, backed by a team that genuinely cares about your satisfaction.',
+        'about.subtitle3': 'We carefully curate our selection to bring you the best brands and products across multiple categories. From the latest electronics to everyday essentials, we\'re committed to offering quality, value, and convenience in every purchase.',
         'about.mission.title': 'Our Mission',
         'about.mission.description': 'We are committed to providing high-quality products at affordable prices while delivering exceptional customer service. Our goal is to make online shopping convenient, secure, and enjoyable for everyone.',
         'about.features.shipping.title': 'Fast Shipping',
