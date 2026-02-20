@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'ecomerce-app-1y26.onrender.com',
+    'localhost',
+    '127.0.0.1',
 ]
 
 
@@ -63,8 +65,13 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  
     "http://127.0.0.1:5173",
-   
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "https://ecomerce-app-iota.vercel.app",  # Production frontend
 ]
+
+# For production, allow all origins temporarily (remove after testing)
+CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

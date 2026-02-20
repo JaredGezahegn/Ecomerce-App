@@ -2,7 +2,7 @@ import CartItem from "./CartItem"
 import CartSummary from "./CartSummary"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import api from "../../api"
+import { api } from "../../utils/api"
 import { useLang } from "../../context/LangContext"
 import { FaShoppingCart, FaArrowLeft } from "react-icons/fa"
 

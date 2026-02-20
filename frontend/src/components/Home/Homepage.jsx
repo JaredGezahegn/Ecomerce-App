@@ -1,7 +1,7 @@
 import Header from './Header';
 import CardContainer from './CardContainer';
 import SearchFilter from './SearchFilter';
-import api from '../../api';
+import { api } from '../../utils/api';
 import React, { useEffect, useState } from "react";
 import PlaceHolderContainer from '../ui/PlaceHolderContainer';
 import Error from '../ui/Error';

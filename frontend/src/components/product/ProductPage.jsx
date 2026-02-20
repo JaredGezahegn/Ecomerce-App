@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import RelatedProducts from './RelatedProduct';
 import ProductPagePlaceHolder from './ProductPagePlaceHolder';
 import { useParams } from "react-router-dom";
-import api from "../../api"
+import { api } from "../../utils/api"
 import { useLang } from '../../context/LangContext';
 import { useAuth } from '../../context/AuthContext';
 
