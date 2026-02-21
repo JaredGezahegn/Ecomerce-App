@@ -1,4 +1,14 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile
+} from 'firebase/auth';
+import { auth } from '../config/firebase';
 import api from '../api';
 
 const AuthContext = createContext();
@@ -16,149 +26,121 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check if user is authenticated on app load
+  // Listen to Firebase auth state changes
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      // Set authorization header
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
-      // Verify token and get user info
-      fetchUserInfo();
-    } else {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          emailVerified: firebaseUser.emailVerified
+        });
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
       setLoading(false);
-    }
-  }, []);
+    });
 
-  const fetchUserInfo = async () => {
-    try {
-      const response = await api.get('user_info/');
-      setUser(response.data);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.log('Token invalid or expired');
-      logout();
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => unsubscribe();
+  }, []);
 
   const login = async (credentials) => {
     try {
-      // Backend uses email as USERNAME_FIELD, so we need to send email
-      const loginData = {
-        email: credentials.email || credentials.username,  // Support both email and username
-        password: credentials.password
-      };
+      const userCredential = await signInWithEmailAndPassword(
+        auth, 
+        credentials.email || credentials.username, 
+        credentials.password
+      );
       
-      const response = await api.post('token/', loginData);
-      
-      // Store tokens
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      
-      // Set authorization header
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-      
-      // Fetch user info
-      await fetchUserInfo();
-      
-      return { success: true, data: response.data };
+      return { success: true, user: userCredential.user };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.detail || 'Login failed' 
-      };
+      let errorMessage = 'Login failed';
+      
+      switch (error.code) {
+        case 'auth/user-not-found':
+          errorMessage = 'No user found with this email';
+          break;
+        case 'auth/wrong-password':
+          errorMessage = 'Incorrect password';
+          break;
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address';
+          break;
+        case 'auth/user-disabled':
+          errorMessage = 'This account has been disabled';
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = 'Too many failed attempts. Please try again later';
+          break;
+        default:
+          errorMessage = error.message;
+      }
+      
+      return { success: false, error: errorMessage };
     }
   };
 
   const signup = async (userData) => {
     try {
-      // Prepare registration data with password2 field required by backend
-      const registrationData = {
-        ...userData,
-        password2: userData.password  // Backend expects password2 for confirmation
-      };
-      
-      // Register user
-      await api.post('auth/register/', registrationData);
-      
-      // Auto-login after signup using email (backend uses email as USERNAME_FIELD)
-      const loginResult = await login({
-        email: userData.email,
-        password: userData.password
-      });
-      
-      return loginResult;
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        userData.email,
+        userData.password
+      );
+
+      // Update profile with display name
+      if (userData.firstName || userData.lastName) {
+        const displayName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+        await updateProfile(userCredential.user, {
+          displayName: displayName
+        });
+      }
+
+      return { success: true, user: userCredential.user };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data || 'Signup failed' 
-      };
+      let errorMessage = 'Signup failed';
+      
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          errorMessage = 'Email already in use';
+          break;
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address';
+          break;
+        case 'auth/weak-password':
+          errorMessage = 'Password should be at least 6 characters';
+          break;
+        default:
+          errorMessage = error.message;
+      }
+      
+      return { success: false, error: errorMessage };
     }
   };
 
-  const logout = () => {
-    // Clear tokens
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    
-    // Clear authorization header
-    delete api.defaults.headers.common['Authorization'];
-    
-    // Clear user state
-    setUser(null);
-    setIsAuthenticated(false);
-  };
-
-  const refreshToken = async () => {
+  const logout = async () => {
     try {
-      const refresh = localStorage.getItem('refresh_token');
-      if (!refresh) {
-        throw new Error('No refresh token');
-      }
-
-      const response = await api.post('token/refresh/', {
-        refresh: refresh
-      });
-
-      localStorage.setItem('access_token', response.data.access);
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-      
-      return response.data.access;
+      await signOut(auth);
+      setUser(null);
+      setIsAuthenticated(false);
     } catch (error) {
-      logout();
-      throw error;
+      console.error('Logout error:', error);
     }
   };
 
-  // Setup axios interceptor for automatic token refresh
-  useEffect(() => {
-    const interceptor = api.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-
-          try {
-            await refreshToken();
-            return api(originalRequest);
-          } catch (refreshError) {
-            logout();
-            return Promise.reject(refreshError);
-          }
-        }
-
-        return Promise.reject(error);
-      }
-    );
-
-    return () => {
-      api.interceptors.response.eject(interceptor);
-    };
-  }, []);
+  const loginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      return { success: true, user: result.user };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  };
 
   const value = {
     user,
@@ -167,8 +149,7 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
-    refreshToken,
-    fetchUserInfo
+    loginWithGoogle
   };
 
   return (

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useLang } from '../../context/LangContext';
 import { useAuth } from '../../context/AuthContext';
+import { FaGoogle } from 'react-icons/fa';
 
 const LoginForm = ({ onSuccess, onSwitchToSignup, isDarkMode }) => {
   const { t } = useLang();
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -32,12 +33,30 @@ const LoginForm = ({ onSuccess, onSwitchToSignup, isDarkMode }) => {
       });
 
       if (result.success) {
-        onSuccess && onSuccess(result.data);
+        onSuccess && onSuccess(result.user);
       } else {
         setError(result.error);
       }
     } catch (err) {
       setError(t('auth.loginFailed'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const result = await loginWithGoogle();
+      if (result.success) {
+        onSuccess && onSuccess(result.user);
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError('Google sign-in failed');
     } finally {
       setLoading(false);
     }
@@ -135,6 +154,34 @@ const LoginForm = ({ onSuccess, onSwitchToSignup, isDarkMode }) => {
           </button>
         </div>
       </form>
+
+      <div className="text-center mb-2">
+        <div className="d-flex align-items-center mb-2">
+          <hr className="flex-grow-1" style={{ borderColor: isDarkMode ? '#404040' : '#dee2e6' }} />
+          <span className={`px-2 ${isDarkMode ? 'text-light' : 'text-muted'}`} style={{ fontSize: '0.7rem' }}>
+            OR
+          </span>
+          <hr className="flex-grow-1" style={{ borderColor: isDarkMode ? '#404040' : '#dee2e6' }} />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2"
+          style={{
+            fontSize: '0.8rem',
+            padding: '8px 16px',
+            borderRadius: '20px',
+            borderColor: isDarkMode ? '#404040' : '#dee2e6',
+            color: isDarkMode ? '#f5f5f5' : '#495057',
+            backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff'
+          }}
+        >
+          <FaGoogle style={{ fontSize: '1rem' }} />
+          <span>Continue with Google</span>
+        </button>
+      </div>
 
       <div className="text-center">
         <p className={`mb-0 ${isDarkMode ? 'text-light' : 'text-muted'}`} style={{ fontSize: '0.75rem' }}>
