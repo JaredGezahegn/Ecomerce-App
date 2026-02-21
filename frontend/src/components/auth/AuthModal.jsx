@@ -3,11 +3,12 @@ import { createPortal } from 'react-dom';
 import { useLang } from '../../context/LangContext';
 import { useAuth } from '../../context/AuthContext';
 import LoginForm from './LoginForm';
+import { FaGoogle } from 'react-icons/fa';
 
 // Compact SignUp component with modern styling
 const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
   const { t } = useLang();
-  const { signup } = useAuth();
+  const { signup, loginWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -88,7 +89,7 @@ const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
       const result = await signup(signupData);
       
       if (result.success) {
-        onSuccess && onSuccess(result.data);
+        onSuccess && onSuccess(result.user);
       } else {
         if (typeof result.error === 'object') {
           setFieldErrors(result.error);
@@ -98,6 +99,24 @@ const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
       }
     } catch (err) {
       setError(t('auth.signupFailed'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const result = await loginWithGoogle();
+      if (result.success) {
+        onSuccess && onSuccess(result.user);
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError('Google sign-up failed');
     } finally {
       setLoading(false);
     }
@@ -354,6 +373,45 @@ const SignUpForm = ({ onSuccess, onSwitchToLogin, isDarkMode }) => {
           </button>
         </div>
       </form>
+
+      <div className="text-center mb-2">
+        <div className="d-flex align-items-center mb-2">
+          <hr className="flex-grow-1" style={{ borderColor: isDarkMode ? '#404040' : '#dee2e6' }} />
+          <span className={`px-2 ${isDarkMode ? 'text-light' : 'text-muted'}`} style={{ fontSize: '0.7rem' }}>
+            OR
+          </span>
+          <hr className="flex-grow-1" style={{ borderColor: isDarkMode ? '#404040' : '#dee2e6' }} />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGoogleSignup}
+          disabled={loading}
+          className="btn w-100 d-flex align-items-center justify-content-center gap-2"
+          style={{
+            fontSize: '0.8rem',
+            padding: '8px 16px',
+            borderRadius: '20px',
+            border: '1px solid #dadce0',
+            color: '#3c4043',
+            backgroundColor: '#ffffff',
+            fontWeight: '500',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = '#f8f9fa';
+            e.target.style.boxShadow = '0 2px 6px rgba(0,0,0,0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = '#ffffff';
+            e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+          }}
+        >
+          <FaGoogle style={{ fontSize: '1rem', color: '#4285f4' }} />
+          <span>Continue with Google</span>
+        </button>
+      </div>
 
       <div className="text-center">
         <p className={`mb-0 ${isDarkMode ? 'text-light' : 'text-muted'}`} style={{ fontSize: '0.75rem' }}>

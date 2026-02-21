@@ -168,17 +168,28 @@ const LoginForm = ({ onSuccess, onSwitchToSignup, isDarkMode }) => {
           type="button"
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2"
+          className="btn w-100 d-flex align-items-center justify-content-center gap-2"
           style={{
             fontSize: '0.8rem',
             padding: '8px 16px',
             borderRadius: '20px',
-            borderColor: isDarkMode ? '#404040' : '#dee2e6',
-            color: isDarkMode ? '#f5f5f5' : '#495057',
-            backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff'
+            border: '1px solid #dadce0',
+            color: '#3c4043',
+            backgroundColor: '#ffffff',
+            fontWeight: '500',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = '#f8f9fa';
+            e.target.style.boxShadow = '0 2px 6px rgba(0,0,0,0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = '#ffffff';
+            e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
           }}
         >
-          <FaGoogle style={{ fontSize: '1rem' }} />
+          <FaGoogle style={{ fontSize: '1rem', color: '#4285f4' }} />
           <span>Continue with Google</span>
         </button>
       </div>
